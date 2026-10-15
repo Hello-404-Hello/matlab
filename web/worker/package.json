@@ -1,0 +1,8 @@
+{
+  "name": "matlab-homework-counter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

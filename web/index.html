@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f6f3">
+  <meta name="description" content="随机打包 MATLAB 第一轮作业 18 道题的解法，并查看每个版本的下载次数。">
+  <title>MATLAB 作业解法库</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="MATLAB 作业解法库首页">
+      <span class="brand-mark">M</span>
+      <span>MATLAB <span class="brand-light">解法库</span></span>
+    </a>
+    <a class="source-link" href="https://github.com/Hello-404-Hello/matlab" target="_blank" rel="noreferrer">GitHub 仓库 <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> 第一轮作业 · MATLAB</p>
+        <h1 id="hero-title">每次下载，<br><em>重新抽取</em>一套解法。</h1>
+        <p class="hero-description">从仓库实时读取 18 道题的现有版本，逐题随机挑选一个解法，打包成可直接运行的作业文件夹。</p>
+        <button id="download-button" class="download-button" type="button" disabled>
+          <span class="button-icon" aria-hidden="true">↓</span>
+          <span class="button-copy"><strong>随机打包下载</strong><small>18 道题 · 每题抽取 1 个版本</small></span>
+          <span class="button-arrow" aria-hidden="true">↗</span>
+        </button>
+        <p id="download-status" class="download-status" role="status" aria-live="polite">正在连接题目仓库…</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="code-card card-back"><span class="code-top"><i></i><i></i><i></i></span><span class="code-line short"></span><span class="code-line"></span><span class="code-line medium"></span></div>
+        <div class="code-card card-front"><span class="code-top"><i></i><i></i><i></i><b>m12_4.m</b></span><span class="code-text"><i>01</i> <b>for</b> k = 1:18</span><span class="code-text"><i>02</i> &nbsp; version = <em>random</em>(…)</span><span class="code-text"><i>03</i> &nbsp; package.add(…)</span><span class="code-text"><i>04</i> <b>end</b></span><span class="code-cursor"></span></div>
+        <span class="art-stamp">18 <small>题</small></span>
+        <span class="art-caption">一题一解 · 随机组合</span>
+      </div>
+    </section>
+
+    <section class="overview" aria-label="解法库概况">
+      <div class="overview-label"><span class="live-dot"></span> 仓库实时版本</div>
+      <div class="overview-stat"><strong id="problem-total">18</strong><span>道题目</span></div>
+      <div class="overview-stat"><strong id="variant-total">—</strong><span>种解法</span></div>
+      <div class="overview-stat"><strong id="download-total">—</strong><span>套下载</span></div>
+      <div class="overview-time" id="updated-at">读取 GitHub 仓库中</div>
+    </section>
+
+    <section class="solutions-section" aria-labelledby="solutions-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">THE COLLECTION</p><h2 id="solutions-title">题目与下载统计</h2></div>
+        <p class="section-note">下载整套压缩包时，每题会随机抽取一个解法。<br>每个版本的下载次数单独记录。</p>
+      </div>
+      <div id="problem-grid" class="problem-grid" aria-live="polite">
+        <div class="loading-card">正在读取题目与版本…</div>
+      </div>
+    </section>
+
+    <section class="note-strip">
+      <span class="note-icon" aria-hidden="true">i</span>
+      <p>压缩包内文件名统一为 <code>m1.m</code> 至 <code>m18.m</code>。第 6 题需要的 <code>餐盘.jpg</code> 会一并放入文件夹。</p>
+      <a href="https://github.com/Hello-404-Hello/matlab/tree/main/第一轮作业题" target="_blank" rel="noreferrer">查看源文件 <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer class="footer"><span>MATLAB 作业解法库</span><span>题目版本随 <a href="https://github.com/Hello-404-Hello/matlab" target="_blank" rel="noreferrer">GitHub 仓库</a> 更新</span></footer>
+</body>
+</html>

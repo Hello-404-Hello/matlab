@@ -1,0 +1,10 @@
+name = "matlab-homework-counter"
+main = "src/index.js"
+compatibility_date = "2026-10-15"
+workers_dev = true
+
+[vars]
+GITHUB_OWNER = "Hello-404-Hello"
+GITHUB_REPO = "matlab"
+GITHUB_BRANCH = "main"
+SITE_ORIGIN = "https://hello-404-hello.github.io"
