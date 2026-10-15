@@ -1,0 +1,46 @@
+﻿第13题数据来源和精度说明
+查询日期：2026-10-15
+
+只建立1号线、8号线的两线网络；在郑州大学、郑州东站换乘。
+同站进出取起步价2元，换乘步行不加里程。票价按PDF给定的分段规则。
+只比较本题两条线路，不包含其他线的潜在捷径。
+
+8号线：郑州交通发展投资集团2026-01-14公布的竣工环境保护验收调查报告，表2.2-4（印刷页36—38），使用28个车站中心里程之差。
+https://www.zzmetro.cn/nav/article-detail/0/42/9543
+https://www.zzmetro.cn/storage/files/郑州市轨道交通8号线一期工程竣工环境保护验收调查报告.pdf
+
+1号线：地铁通（MetroMan）公开换乘查询，相邻站直达1站的显示里程。
+页面显示公里时已取整到0.1km，显示米时保留其数值。不是官方精确计费里程。
+程序使用以下公开近似数据进行作业模型计算，累计取整误差可能改变6、13、21、30等公里边界附近的收费档位。若需实际出行票价，应核对运营方；若获得精确站间数据，修改各版本文件末尾metro_data函数中的one数组即可。
+没有使用等距均分，也没有用站点直线距离冒充轨道里程。
+
+起站	终站	距离(km)	查询链接
+河南工业大学	郑大科技园	1.1	https://www.metroman.cn/planner/zhengzhou/henan-university-of-technology-to-zhengzhou-university-sci-tech-park?mode=now&fare=cash
+郑大科技园	郑州大学	1.0	https://www.metroman.cn/planner/zhengzhou/zhengzhou-university-sci-tech-park-to-zhengzhou-university?mode=now&fare=cash
+郑州大学	梧桐街	1.5	https://www.metroman.cn/planner/zhengzhou/zhengzhou-university-to-wutongjie?mode=now&fare=cash
+梧桐街	兰寨	1.2	https://www.metroman.cn/planner/zhengzhou/wutongjie-to-lanzhai?mode=now&fare=cash
+兰寨	铁炉	1.7	https://www.metroman.cn/planner/zhengzhou/lanzhai-to-tielu?mode=now&fare=cash
+铁炉	市民中心	1.7	https://www.metroman.cn/planner/zhengzhou/tielu-to-civic-center?mode=now&fare=cash
+市民中心	西流湖	1.5	https://www.metroman.cn/planner/zhengzhou/civic-center-to-xiliuhu?mode=now&fare=cash
+西流湖	西三环	1.6	https://www.metroman.cn/planner/zhengzhou/xiliuhu-to-xisanhuan?mode=now&fare=cash
+西三环	秦岭路	1.4	https://www.metroman.cn/planner/zhengzhou/xisanhuan-to-qinlinglu?mode=now&fare=cash
+秦岭路	五一公园	0.943	https://www.metroman.cn/planner/zhengzhou/qinlinglu-to-wuyigongyuan?mode=now&fare=cash
+五一公园	碧沙岗	0.993	https://www.metroman.cn/planner/zhengzhou/wuyigongyuan-to-bishagang?mode=now&fare=cash
+碧沙岗	绿城广场	1.4	https://www.metroman.cn/planner/zhengzhou/bishagang-to-luchengguangchang?mode=now&fare=cash
+绿城广场	医学院	0.979	https://www.metroman.cn/planner/zhengzhou/luchengguangchang-to-yixueyuan?mode=now&fare=cash
+医学院	郑州火车站	1.2	https://www.metroman.cn/planner/zhengzhou/yixueyuan-to-zhengzhou-railway-station?mode=now&fare=cash
+郑州火车站	二七广场	1.1	https://www.metroman.cn/planner/zhengzhou/zhengzhou-railway-station-to-erqi-guangchang?mode=now&fare=cash
+二七广场	人民路	0.961	https://www.metroman.cn/planner/zhengzhou/erqi-guangchang-to-renminlu?mode=now&fare=cash
+人民路	紫荆山	0.925	https://www.metroman.cn/planner/zhengzhou/renminlu-to-zijingshan?mode=now&fare=cash
+紫荆山	燕庄	2.0	https://www.metroman.cn/planner/zhengzhou/zijingshan-to-yanzhuang?mode=now&fare=cash
+燕庄	民航路	0.914	https://www.metroman.cn/planner/zhengzhou/yanzhuang-to-minhanglu?mode=now&fare=cash
+民航路	会展中心	1.1	https://www.metroman.cn/planner/zhengzhou/minhanglu-to-convention-exhibition-center?mode=now&fare=cash
+会展中心	黄河南路	2.0	https://www.metroman.cn/planner/zhengzhou/convention-exhibition-center-to-huanghenanlu?mode=now&fare=cash
+黄河南路	农业南路	1.0	https://www.metroman.cn/planner/zhengzhou/huanghenanlu-to-nongyenanlu?mode=now&fare=cash
+农业南路	东风南路	1.3	https://www.metroman.cn/planner/zhengzhou/nongyenanlu-to-dongfengnanlu?mode=now&fare=cash
+东风南路	郑州东站	1.1	https://www.metroman.cn/planner/zhengzhou/dongfengnanlu-to-zhengzhou-east-railway-station?mode=now&fare=cash
+郑州东站	博学路	1.6	https://www.metroman.cn/planner/zhengzhou/zhengzhou-east-railway-station-to-boxuelu?mode=now&fare=cash
+博学路	市体育中心	2.5	https://www.metroman.cn/planner/zhengzhou/boxuelu-to-zhengzhou-sports-center?mode=now&fare=cash
+市体育中心	龙子湖	2.2	https://www.metroman.cn/planner/zhengzhou/zhengzhou-sports-center-to-longzihu?mode=now&fare=cash
+龙子湖	文苑北路	1.8	https://www.metroman.cn/planner/zhengzhou/longzihu-to-wenyuanbeilu?mode=now&fare=cash
+文苑北路	河南大学新区	1.4	https://www.metroman.cn/planner/zhengzhou/wenyuanbeilu-to-new-campus-of-henan-university?mode=now&fare=cash
