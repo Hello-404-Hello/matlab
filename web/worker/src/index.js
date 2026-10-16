@@ -22,6 +22,21 @@ export default {
         const data = await loadRepoState(env);
         return json(makeCountsResponse(data.files, data.countsDoc), 200, cors);
       }
+      if (request.method === "POST" && path === "/record") {
+        const body = await request.json();
+        if (!Array.isArray(body.files) || body.files.length !== QUESTION_COUNT) {
+          return json({error:"每题需要恰好提交一个解法版本"}, 400, cors);
+        }
+        const data = await loadRepoState(env);
+        const available = new Map(data.files.map(file => [file.name,file]));
+        const selected = body.files.map(name => available.get(name));
+        const questions = new Set(selected.filter(Boolean).map(file => file.number));
+        if (selected.some(file => !file) || questions.size !== QUESTION_COUNT) {
+          return json({error:"解法版本无效或题目重复"}, 400, cors);
+        }
+        const updated = await incrementCounts(env, body.files);
+        return json({updatedAt:updated.updatedAt}, 200, cors);
+      }
       if (request.method === "POST" && path === "/download") {
         const data = await loadRepoState(env);
         const selected = chooseVersions(data.files);

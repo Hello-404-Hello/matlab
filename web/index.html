@@ -8,6 +8,7 @@
   <title>MATLAB 作业解法库</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
+  <script src="zip.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -24,13 +25,13 @@
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-dot"></span> 第一轮作业 · MATLAB</p>
         <h1 id="hero-title">我既不是派蒙，<br>也不是欧门，<br>我是蒙多，<br><em>我想去哪就去哪</em></h1>
-        <p class="hero-description">从仓库实时读取 18 道题的现有版本，逐题随机挑选一个解法，打包成可直接运行的作业文件夹。</p>
+        <p class="hero-description">从本站读取 18 道题的现有版本，逐题随机挑选一个解法，打包成可直接运行的作业文件夹。</p>
         <button id="download-button" class="download-button" type="button" disabled>
           <span class="button-icon" aria-hidden="true">↓</span>
           <span class="button-copy"><strong>随机打包下载</strong><small>18 道题 · 每题抽取 1 个版本</small></span>
           <span class="button-arrow" aria-hidden="true">↗</span>
         </button>
-        <p id="download-status" class="download-status" role="status" aria-live="polite">正在连接题目仓库…</p>
+        <p id="download-status" class="download-status" role="status" aria-live="polite">正在读取本站解法…</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
@@ -55,20 +56,20 @@
     </dialog>
 
     <section class="overview" aria-label="解法库概况">
-      <div class="overview-label"><span class="live-dot"></span> 仓库实时版本</div>
+      <div class="overview-label"><span class="live-dot"></span> 本站解法版本</div>
       <div class="overview-stat"><strong id="problem-total">18</strong><span>道题目</span></div>
       <div class="overview-stat"><strong id="variant-total">—</strong><span>种解法</span></div>
       <div class="overview-stat"><strong id="download-total">—</strong><span>套下载</span></div>
-      <div class="overview-time" id="updated-at">读取 GitHub 仓库中</div>
+      <div class="overview-time" id="updated-at">读取本站版本中</div>
     </section>
 
     <section class="solutions-section" aria-labelledby="solutions-title">
       <div class="section-heading">
         <div><p class="eyebrow">THE COLLECTION</p><h2 id="solutions-title">题目与下载统计</h2></div>
-        <p class="section-note">下载整套压缩包时，每题会随机抽取一个解法。<br>每个版本的下载次数单独记录。</p>
+        <p class="section-note">下载整套压缩包时，每题会随机抽取一个解法。<br>计数服务可用时同步更新下载次数。</p>
       </div>
       <div id="problem-grid" class="problem-grid" aria-live="polite">
-        <div class="loading-card">正在读取题目与版本…</div>
+        <div class="loading-card">正在读取本站题目与版本…</div>
       </div>
     </section>
 

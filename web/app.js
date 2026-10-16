@@ -56,37 +56,68 @@
     return new Intl.DateTimeFormat("zh-CN", {month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"Asia/Shanghai"}).format(date);
   }
 
-  async function loadCounts() {
-    if (!api) {
-      await loadPublicRepo();
-      return false;
+  async function fetchWithTimeout(url, options = {}, timeout = 3500) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      return await fetch(url, {...options,signal:controller.signal});
+    } finally {
+      clearTimeout(timer);
     }
-    const response = await fetch(`${api}/counts`, {cache:"no-store"});
+  }
+
+  async function loadManifest() {
+    const response = await fetch(new URL("manifest.json",document.baseURI), {cache:"no-store"});
+    if (!response.ok) throw new Error(`本站题目清单读取失败：${response.status}`);
+    const data = await response.json();
+    render(data);
+  }
+
+  async function loadCounts() {
+    if (!api) return;
+    const response = await fetchWithTimeout(`${api}/counts`, {cache:"no-store"});
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || `计数服务返回 ${response.status}`);
     render(data);
-    return true;
+    setStatus("题目版本与下载次数已同步。", "success");
   }
 
-  async function loadPublicRepo() {
-    const base = "https://api.github.com/repos/Hello-404-Hello/matlab";
-    const [listingResponse,countResponse] = await Promise.all([
-      fetch(`${base}/contents/${encodeURIComponent("第一轮作业题")}?ref=main`,{cache:"no-store",headers:{Accept:"application/vnd.github+json"}}),
-      fetch("https://raw.githubusercontent.com/Hello-404-Hello/matlab/main/web/download-counts.md",{cache:"no-store"})
-    ]);
-    if (!listingResponse.ok || !countResponse.ok) throw new Error("无法连接 GitHub 仓库");
-    const listing = await listingResponse.json();
-    const countText = await countResponse.text();
-    const counts = new Map(Array.from(countText.matchAll(/^\|\s*(m(?:1[0-8]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$/gm),match => [match[1],Number(match[2])]));
-    const questions = Array.from({length:18},(_,index) => {
-      const number = index+1;
-      const variants = listing.filter(file => file.type === "file" && new RegExp(`^m${number}_(\\d+)\\.m$`).test(file.name))
-        .map(file => ({file:file.name,downloadCount:counts.get(file.name) || 0}))
-        .sort((a,b) => versionNumber(a.file)-versionNumber(b.file));
-      return {number,variants,downloadCount:variants.reduce((sum,item) => sum+item.downloadCount,0)};
+  async function readSolution(filename) {
+    const response = await fetch(new URL(`solutions/${encodeURIComponent(filename)}`,document.baseURI), {cache:"force-cache"});
+    if (!response.ok) throw new Error(`${filename} 下载失败：${response.status}`);
+    return new Uint8Array(await response.arrayBuffer());
+  }
+
+  async function buildPackage() {
+    const selected = state.questions.map(question => {
+      const variants = question.variants || [];
+      if (!variants.length) throw new Error(`第 ${question.number} 题暂无可下载版本`);
+      return {number:question.number, file:variants[Math.floor(Math.random()*variants.length)].file};
     });
-    const updated = countText.match(/^最后更新：(.+)$/m);
-    render({questions,updatedAt:updated ? updated[1].trim() : null});
+    const scripts = selected.map(async item => ({
+      name:`第一轮作业题/m${item.number}.m`,
+      data:await readSolution(item.file)
+    }));
+    const attachments = ["餐盘.jpg", "碱基对.txt", "手机号.xlsx"].map(async name => ({
+      name:`第一轮作业题/${name}`,
+      data:await readSolution(name)
+    }));
+    const entries = await Promise.all([...scripts,...attachments]);
+    return {blob:window.MatlabZip.create(entries),selected};
+  }
+
+  async function syncDownloadCounts(selected) {
+    if (!api) return;
+    try {
+      const response = await fetchWithTimeout(`${api}/record`, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({files:selected.map(item => item.file)})
+      }, 4000);
+      if (!response.ok) return;
+      await loadCounts();
+    } catch {
+    }
   }
 
   function displayLoadError(error) {
@@ -96,17 +127,11 @@
   }
 
   button.addEventListener("click", async () => {
-    if (!api || !state || button.disabled) return;
+    if (!state || button.disabled) return;
     button.disabled = true;
-    setStatus("正在随机抽取解法并打包…");
+    setStatus("正在从本站读取解法并打包…");
     try {
-      const response = await fetch(`${api}/download`, {method:"POST", headers:{"Content-Type":"application/json"}, body:"{}"});
-      const contentType = response.headers.get("content-type") || "";
-      if (!response.ok || !contentType.includes("application/zip")) {
-        const data = contentType.includes("application/json") ? await response.json() : {error:`下载服务返回 ${response.status}`};
-        throw new Error(data.error || `下载服务返回 ${response.status}`);
-      }
-      const blob = await response.blob();
+      const {blob,selected} = await buildPackage();
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -115,21 +140,21 @@
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url),60000);
-      const selected = response.headers.get("X-Selected-Solutions");
-      setStatus(selected ? `已下载；本包抽中的版本：${selected}` : "已生成并下载随机解法包。", "success");
+      setStatus(`已下载；本包抽中的版本：${selected.map(item => item.file).join(",")}`, "success");
       aiModel.textContent = aiModels[Math.floor(Math.random()*aiModels.length)];
       if (typeof aiDialog.showModal === "function") aiDialog.showModal();
       else window.alert(`你抽到的降重AI是：${aiModel.textContent}\n请使用你抽到的AI模型和 README 中的降重 Prompt 进行降重。`);
-      await loadCounts();
       button.disabled = false;
+      void syncDownloadCounts(selected);
     } catch (error) {
       setStatus(error.message, "error");
       button.disabled = false;
     }
   });
 
-  loadCounts().then(ready => {
-    button.disabled = !ready;
-    setStatus(ready ? "版本与下载次数已从仓库读取。" : "版本与计数已实时读取；打包服务正在等待 Worker 配置。", ready ? "success" : "");
+  loadManifest().then(() => {
+    button.disabled = false;
+    setStatus("题目版本已从本站读取；下载统计显示最近同步数据。", "success");
+    void loadCounts().catch(() => {});
   }).catch(displayLoadError);
 })();

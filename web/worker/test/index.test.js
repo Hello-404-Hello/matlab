@@ -109,6 +109,13 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
     assert.match(files.find(file => file.name === `${folder}/m3.m`).payload.toString("utf8"),/m3_2\.m/);
     assert.match(countDocument,/\| m3_2\.m \| 1 \|/);
     assert.equal((countDocument.match(/^\|\s*m\d+_\d+\.m\s*\|\s*1\s*\|$/gm) || []).length,18);
+
+    const selected = Array.from({length:18},(_,index) => `m${index+1}_${index===2 ? 2 : 1}.m`);
+    const recordResponse = await worker.fetch(new Request("https://worker.test/record", {method:"POST",headers:{Origin:origin,"Content-Type":"application/json"},body:JSON.stringify({files:selected})}), env);
+    assert.equal(recordResponse.status,200,await recordResponse.clone().text());
+    assert.match(countDocument,/\| m3_2\.m \| 2 \|/);
+    const invalidRecord = await worker.fetch(new Request("https://worker.test/record", {method:"POST",headers:{Origin:origin,"Content-Type":"application/json"},body:JSON.stringify({files:[]})}), env);
+    assert.equal(invalidRecord.status,400);
   } finally {
     globalThis.fetch = originalFetch;
   }
