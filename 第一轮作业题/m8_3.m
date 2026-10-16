@@ -1,5 +1,3 @@
-% 从9、10、11三个基例扩展。
-% 输入为大于8的整数，输出每组[3的系数,5的系数]。
 N=29;
 [three,five]=decompose35_base(N);
 disp([three five]);

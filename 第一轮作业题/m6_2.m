@@ -1,8 +1,4 @@
-%%四角投影标定:从像素坐标映射到厘米坐标
 clear
-%参考正方形边长10cm,输出面积(cm^2)。
-%interactive=true时手工点选,参考矩形与轮廓共面。
-%四角按顺时针点选,第1至第2角为宽,第2至第3角为高。
 interactive=false;
 if interactive
     [name,path]=uigetfile({'*.jpg;*.jpeg;*.png;*.bmp','照片'});
@@ -60,4 +56,3 @@ axis equal
 grid on
 xlabel('cm')
 ylabel('cm')
-

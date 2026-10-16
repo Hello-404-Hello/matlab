@@ -1,5 +1,3 @@
-% 随机位置替换字母。
-% 车型1燃油、2纯电、3混动；输出10个不同车牌。
 rng(12);
 kind=1;
 answer=plate_candidates_place(kind);

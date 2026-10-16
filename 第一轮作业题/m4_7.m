@@ -1,4 +1,3 @@
-%%用双层循环逐点求出三个轮心的高度
 clear
 x=0:0.002:12;
 height=zeros(3,length(x));
@@ -12,7 +11,6 @@ for i=1:3
         offset=x(j)-segment*period-halfSide;
         height(i,j)=sqrt(1-offset^2);
     end
-    %在一个周期内等间距取中点,累加高度与高度平方。
     total=0;
     squareTotal=0;
     samples=20000;
@@ -28,6 +26,4 @@ end
 figure
 plot(x,height(1,:),'b',x,height(2,:),'r',x,height(3,:),'g')
 legend('3','4','5')
-%输出边数、高度极差、按水平路程平均的高度标准差。
 disp(roughness)
-

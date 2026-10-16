@@ -1,5 +1,3 @@
-% 逻辑矩阵扩张：从首行开始，每轮把可达区域向四邻域扩张一格。
-% 输出0或1。
 rng('shuffle');
 field=false(100);
 field(randperm(10000,6500))=true;

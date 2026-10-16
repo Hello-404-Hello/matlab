@@ -1,5 +1,3 @@
-% 按通解步长列出全部解。
-% 输入为大于8的整数，输出每组[3的系数,5的系数]。
 n=29;
 solutions=allDecompositions(n);
 disp(solutions);

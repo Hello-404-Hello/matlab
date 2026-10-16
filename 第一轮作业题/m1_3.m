@@ -1,4 +1,3 @@
-%%用逻辑与得到点乘结果,矩阵乘法按列累加
 clearvars;
 left=floor(2*rand(11,11));
 right=floor(2*rand(11,11));
@@ -14,4 +13,3 @@ title(ax1,'A.*B');
 ax2=subplot(1,2,2);
 imshow(product,[],'Parent',ax2);
 title(ax2,'A*B');
-

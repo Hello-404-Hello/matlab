@@ -1,4 +1,3 @@
-%%生成100个候选变量名,逐项记录不符合规则的原因
 clear
 letters=['a':'z','A':'Z'];
 pool=[letters,'0':'9','_'];
@@ -19,7 +18,6 @@ for i=1:100
     if iskeyword(name)
         reason=[reason,'MATLAB关键词;'];
     end
-    %生成字符已限制为字母、数字、下划线,因此没有非法字符。
     valid(i)=isvarname(name);
     if valid(i)
         reason='通过';
@@ -27,4 +25,3 @@ for i=1:100
     errors{i}=reason;
     fprintf('%3d\t%s\t%d\t%s\n',i,name,valid(i),reason);
 end
-

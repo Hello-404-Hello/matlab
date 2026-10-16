@@ -1,5 +1,3 @@
-% 批量过滤去重。
-% 车型1燃油、2纯电、3混动；输出10个不同车牌。
 rng(12);
 type=1;
 result=plate_candidates_batch(type);

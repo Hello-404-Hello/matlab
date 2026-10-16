@@ -1,4 +1,3 @@
-% 数据、建图、Floyd和计费集中写在一个局部函数中。
 line1=1;
 station1='河南工业大学';
 line2=8;
@@ -52,11 +51,7 @@ for k=1:2
     which=find([1,8]==lines(k));
     available=stations{which};
     stop=stops{k};
-    if isnumeric(stop)
-        selected=stop;
-    else
-        selected=find(strcmp(available,stop));
-    end
+    selected=find(strcmp(available,stop));
     ids(k)=find(strcmp(names,available{selected}));
 end
 source=ids(1);

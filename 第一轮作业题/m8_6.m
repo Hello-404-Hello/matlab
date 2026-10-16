@@ -1,5 +1,3 @@
-% 双循环依次尝试3和5的系数。
-% n为大于8的整数，输出[3的系数,5的系数]。
 n=29;
 [three,five]=splitByLoops(n);
 disp([three five]);

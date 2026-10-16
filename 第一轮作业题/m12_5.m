@@ -1,5 +1,3 @@
-% 先选字母位置，再逐位生成，逐个比较去重。
-% kind为1燃油、2纯电、3混动，输出10个不同车牌。
 rng(12);
 kind=1;
 plates=platesByPositions(kind);

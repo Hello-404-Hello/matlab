@@ -1,11 +1,4 @@
-% 按数字变化位置分段，找长度至少为3的连续段。
-% numbers每行11位，输出含三连数字的号码。
-rng(9);
-numbers=char(randi([0 9],100,11)+'0');
-numbers(:,1)='1';
-numbers(:,2)=char(randi([3 9],100,1)+'0');
-numbers(1,:)='13811124567';
-numbers(2,:)='13988801234';
+numbers=char(readcell('手机号.xlsx'));
 chosen=selectTriple(numbers);
 disp(numbers(chosen,:));
 

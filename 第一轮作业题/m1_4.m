@@ -1,4 +1,3 @@
-%%随机小数四舍五入后变成零一矩阵
 clear
 x=round(rand(11));
 y=round(rand(11));
@@ -12,4 +11,3 @@ for p=1:2
     imshow(results(:,:,p),[])
     title(names{p})
 end
-

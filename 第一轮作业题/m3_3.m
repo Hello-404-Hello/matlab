@@ -1,4 +1,3 @@
-%%先建立随机字符矩阵,再切出100个不同长度的名称
 clearvars;
 alphabet=['a':'z','A':'Z','0':'9','_'];
 lengths=randi([1,namelengthmax+12],100,1);
@@ -29,4 +28,3 @@ for row=1:100
 end
 result=table(Name,IsValid,ErrorType);
 disp(result);
-

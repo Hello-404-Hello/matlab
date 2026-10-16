@@ -1,5 +1,3 @@
-% 列出允许的字母位置模式，再随机选择一种模式填入字符。
-% kind为1燃油、2纯电、3混动，输出10个不同车牌。
 rng(12);
 kind=1;
 plates=platesFromMasks(kind);

@@ -1,5 +1,3 @@
-% 将随机整数按34进制展开成五位尾号，再筛选字母数量。
-% kind为1燃油、2纯电、3混动，输出10个不同车牌。
 rng(12);
 kind=1;
 plates=platesFromNumbers(kind);

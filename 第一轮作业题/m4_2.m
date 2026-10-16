@@ -1,4 +1,3 @@
-%%使用旋转矩阵计算轮心绕前方顶点的运动
 clear
 answer=zeros(3,3);
 figure
@@ -33,7 +32,4 @@ grid on
 legend('3','4','5')
 xlabel('x')
 ylabel('y')
-%依次输出边数、轮心高度极差、按水平路程加权的高度标准差。
-%三角形的两项指标最大,五边形最小。
 disp(answer)
-

@@ -1,4 +1,3 @@
-% 深度优先搜索，用一个栈向下寻找。输出0或1。
 rng('shuffle');
 a=zeros(100,100);
 pick=randperm(10000);

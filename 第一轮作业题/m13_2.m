@@ -5,7 +5,6 @@ toLine=8;
 [money,km,stops]=metro_fare_floyd(fromLine,fromStation,toLine,toStation);
 fprintf('%d\n',money);
 
-
 function [fare,distance,path]=metro_fare_floyd(startLine,startStation,endLine,endStation)
 [D,begin,finish,names]=metro_network(startLine,startStation,endLine,endStation);
 n=length(D);
@@ -63,11 +62,7 @@ for k=1:2
     which=find([1,8]==lines(k));
     available=stations{which};
     stop=stops{k};
-    if isnumeric(stop)
-        selected=stop;
-    else
-        selected=find(strcmp(available,stop));
-    end
+    selected=stop;
     ids(k)=find(strcmp(names,available{selected}));
 end
 source=ids(1);

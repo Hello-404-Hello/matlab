@@ -1,7 +1,4 @@
-%%逐行找白色边界,用凸包多边形估算餐盘面积
 clearvars;
-%黑色参考物边长10cm,输出面积(cm^2)。
-%逐行取边缘点,用凸包连接餐盘轮廓。
 photo=imread('餐盘.jpg');
 rgb=double(photo);
 light=min(rgb,[],3);
@@ -27,7 +24,6 @@ dark=max(rgb,[],3)<70;
 cardMask=false(nr,nc);
 cardMask(380:675,1200:1500)=dark(380:675,1200:1500);
 [cardY,cardX]=find(cardMask);
-%正摄方形参考物的宽、高像素数取平均,减小单边读数偏差。
 pixelSide=mean([max(cardX)-min(cardX)+1,max(cardY)-min(cardY)+1]);
 realSide=10;
 areaCm2=polyarea(x,y)*(realSide/pixelSide)^2;

@@ -1,5 +1,3 @@
-% 逐号拒绝采样。
-% 车型1燃油、2纯电、3混动；输出10个不同车牌。
 rng(12);
 carType=1;
 plates=plate_candidates_reject(carType);

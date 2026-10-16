@@ -1,5 +1,3 @@
-% 数字字母组合洗牌。
-% 车型1燃油、2纯电、3混动；输出10个不同车牌。
 rng(12);
 model=1;
 choices=plate_candidates_shuffle(model);

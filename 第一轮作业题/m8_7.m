@@ -1,5 +1,3 @@
-% 按除以3的余数分三种情况。
-% number为大于8的整数，输出[3的系数,5的系数]。
 number=29;
 [x,y]=splitByRemainder(number);
 disp([x y]);

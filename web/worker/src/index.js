@@ -183,11 +183,15 @@ async function fetchPackageFiles(env, selected) {
     return {name:`${QUESTION_FOLDER}/${finalName}`,data};
   });
   const scriptEntries = await Promise.all(requests);
-  const imageResponse = await githubResponse(env, contentsUrl(env, `${QUESTION_FOLDER}/餐盘.jpg`));
-  const imageInfo = await imageResponse.json();
-  const imageRaw = await fetch(imageInfo.download_url, {headers:{"Cache-Control":"no-cache"}});
-  if (!imageRaw.ok) throw new Error(`下载餐盘图片失败：${imageRaw.status}`);
-  scriptEntries.push({name:`${QUESTION_FOLDER}/餐盘.jpg`,data:new Uint8Array(await imageRaw.arrayBuffer())});
+  const supportFiles = ["餐盘.jpg","碱基对.txt","手机号.xlsx"];
+  const supportEntries = await Promise.all(supportFiles.map(async name => {
+    const fileResponse = await githubResponse(env, contentsUrl(env, `${QUESTION_FOLDER}/${name}`));
+    const fileInfo = await fileResponse.json();
+    const raw = await fetch(fileInfo.download_url, {headers:{"Cache-Control":"no-cache"}});
+    if (!raw.ok) throw new Error(`下载${name}失败：${raw.status}`);
+    return {name:`${QUESTION_FOLDER}/${name}`,data:new Uint8Array(await raw.arrayBuffer())};
+  }));
+  scriptEntries.push(...supportEntries);
   return scriptEntries;
 }
 

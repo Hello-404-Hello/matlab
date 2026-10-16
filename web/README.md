@@ -2,7 +2,7 @@
 
 网站源码在本目录，发布地址预定为 <https://hello-404-hello.github.io/matlab/>。
 
-网页每次打开时，通过 Worker 查询 GitHub 仓库 `第一轮作业题` 目录里的 `m1_*.m` 至 `m18_*.m`，所以新增版本后无需手动修改网页。计数文档没有的解法会显示为 0。点击打包按钮时，Worker 对每题随机选一个当前版本，将文件改名为 `m1.m` 至 `m18.m`，连同 `餐盘.jpg` 打成 ZIP，并把实际抽中的各版本下载次数写回 [`download-counts.md`](download-counts.md)。
+网页每次打开时，通过 Worker 查询 GitHub 仓库 `第一轮作业题` 目录里的 `m1_*.m` 至 `m18_*.m`，所以新增版本后无需手动修改网页。计数文档没有的解法会显示为 0。点击打包按钮时，Worker 对每题随机选一个当前版本，将文件改名为 `m1.m` 至 `m18.m`，连同 `餐盘.jpg`、`碱基对.txt` 和 `手机号.xlsx` 打成 ZIP，并把实际抽中的各版本下载次数写回 [`download-counts.md`](download-counts.md)。
 
 ## 发布网页
 

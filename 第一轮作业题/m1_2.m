@@ -1,4 +1,3 @@
-%%先产生均匀随机数,再用阈值得到0和1
 clearvars
 a=double(rand(11)>0.5);
 b=double(rand(11)>0.5);
@@ -19,4 +18,3 @@ title('A.*B')
 subplot(122)
 imshow(matrixResult,[0,11])
 title('A*B')
-

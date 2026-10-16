@@ -1,4 +1,3 @@
-%%先标出保留位置,再从尾部向前删除其余元素
 clear
 numbers=1000:-1:1;
 positions=cumsum(1:1000);
@@ -12,4 +11,3 @@ for index=1000:-1:1
 end
 disp(numbers)
 disp(numel(numbers))
-

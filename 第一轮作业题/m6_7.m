@@ -1,9 +1,7 @@
-%%将颜色分割封装为本文件的局部函数
 clearvars;
 img=imread('餐盘.jpg');
 tray=select_region(img,[1,1200,1,1024],1);
 card=select_region(img,[1200,1500,380,675],2);
-%黑色参考物面积100cm^2。
 areaCm2=100*sum(tray(:))/sum(card(:));
 disp(areaCm2);
 figure;
@@ -30,4 +28,3 @@ sizes=cellfun(@numel,parts.PixelIdxList);
 mask(:)=false;
 mask(parts.PixelIdxList{which})=true;
 end
-

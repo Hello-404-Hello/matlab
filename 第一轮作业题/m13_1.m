@@ -5,7 +5,6 @@ station2='鲁庙';
 [fee,distance,route]=metro_fare_dijkstra(line1,station1,line2,station2);
 disp(fee)
 
-
 function [fare,distance,path]=metro_fare_dijkstra(line1,station1,line2,station2)
 [A,s,t,names]=metro_network(line1,station1,line2,station2);
 n=size(A,1);
@@ -64,11 +63,7 @@ for k=1:2
     which=find([1,8]==lines(k));
     available=stations{which};
     stop=stops{k};
-    if isnumeric(stop)
-        selected=stop;
-    else
-        selected=find(strcmp(available,stop));
-    end
+    selected=find(strcmp(available,stop));
     ids(k)=find(strcmp(names,available{selected}));
 end
 source=ids(1);

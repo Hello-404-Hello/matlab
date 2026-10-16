@@ -1,8 +1,4 @@
-%%颜色分割和像素计数:直接求餐盘与参考物的面积比
 clearvars;
-%黑色参考物面积100cm^2,输出餐盘面积(cm^2)。
-%按白色餐盘和黑色参考物的颜色阈值分割。
-%用imfill填孔,用bwconncomp提取连通区域。
 interactive=false;
 if interactive
     [file,folder]=uigetfile({'*.jpg;*.jpeg;*.png;*.bmp','照片'});
@@ -39,7 +35,6 @@ values=double(img);
 brightness=min(values,[],3);
 colorRange=max(values,[],3)-brightness;
 trayMask=trayRegion&brightness>150&colorRange<45;
-%填补内部红色商标造成的空洞,保留最大连通块以去除零碎亮点。
 trayMask=imfill(trayMask,'holes');
 trayParts=bwconncomp(trayMask,4);
 [~,largest]=max(cellfun(@numel,trayParts.PixelIdxList));

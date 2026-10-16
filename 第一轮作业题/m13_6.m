@@ -1,4 +1,3 @@
-% 主程序中直接建图、找最短路并计算费用。
 line1=1;
 station1='河南工业大学';
 line2=8;
@@ -48,11 +47,7 @@ for k=1:2
     which=find([1,8]==lines(k));
     available=stations{which};
     stop=stops{k};
-    if isnumeric(stop)
-        selected=stop;
-    else
-        selected=find(strcmp(available,stop));
-    end
+    selected=find(strcmp(available,stop));
     ids(k)=find(strcmp(names,available{selected}));
 end
 source=ids(1);

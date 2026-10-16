@@ -5,7 +5,6 @@ endStop='鲁庙';
 [answer,km,route]=metro_fare_relax(beginLine,beginStop,endLine,endStop);
 disp(answer)
 
-
 function [fare,distance,path]=metro_fare_relax(firstLine,firstStop,lastLine,lastStop)
 [A,s,t,stationNames]=metro_network(firstLine,firstStop,lastLine,lastStop);
 [from,to]=find(isfinite(A)&A>0);
@@ -65,11 +64,7 @@ for k=1:2
     which=find([1,8]==lines(k));
     available=stations{which};
     stop=stops{k};
-    if isnumeric(stop)
-        selected=stop;
-    else
-        selected=find(strcmp(available,stop));
-    end
+    selected=find(strcmp(available,stop));
     ids(k)=find(strcmp(names,available{selected}));
 end
 source=ids(1);

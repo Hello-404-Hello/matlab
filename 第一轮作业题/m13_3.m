@@ -3,7 +3,6 @@ ending='鲁庙';
 [price,totalDistance,path]=metro_fare_graph(1,starting,8,ending);
 disp(price);
 
-
 function [fare,distance,path]=metro_fare_graph(a,start,b,finish)
 [matrix,source,target,names]=metro_network(a,start,b,finish);
 [row,col]=find(triu(isfinite(matrix)&matrix>0,1));
@@ -41,11 +40,7 @@ for k=1:2
     which=find([1,8]==lines(k));
     available=stations{which};
     stop=stops{k};
-    if isnumeric(stop)
-        selected=stop;
-    else
-        selected=find(strcmp(available,stop));
-    end
+    selected=find(strcmp(available,stop));
     ids(k)=find(strcmp(names,available{selected}));
 end
 source=ids(1);

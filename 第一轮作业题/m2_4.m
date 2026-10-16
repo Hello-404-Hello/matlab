@@ -1,4 +1,3 @@
-%%从头扫描一次,用倒计数决定当前数是留下还是跳过
 clear
 original=1000:-1:1;
 left=zeros(1,1000);
@@ -16,4 +15,3 @@ end
 left=left(1:count);
 disp(left)
 disp(count)
-

@@ -1,11 +1,9 @@
-% 每一对碱基拼成两个字符，再和四种合法配对逐一比较。
-% 两链按位置对齐，输出错误位置，全对输出0。
-left='ATGCCGTATAGCGTACGATC';
-right='TACGGCATATCGCATGCTAG';
-right([4 11])='AU';
+basePairLines=readlines('碱基对.txt');
+left=char(basePairLines(2));
+right=char(basePairLines(4));
 rules={'AT','TA','GC','CG'};
-matched=false(1,max(numel(left),numel(right)));
-for index=1:min(numel(left),numel(right))
+matched=false(1,numel(left));
+for index=1:numel(left)
     pair=[left(index) right(index)];
     for rule=1:4
         if strcmp(pair,rules{rule})

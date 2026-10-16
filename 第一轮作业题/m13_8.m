@@ -1,4 +1,3 @@
-% 用队列逐站更新距离，计算过程展开在主程序。
 startLine=1;
 startStation='河南工业大学';
 endLine=8;
@@ -48,11 +47,7 @@ for k=1:2
     which=find([1,8]==lines(k));
     available=stationTable{which};
     stop=stops{k};
-    if isnumeric(stop)
-        selected=stop;
-    else
-        selected=find(strcmp(available,stop));
-    end
+    selected=find(strcmp(available,stop));
     ids(k)=find(strcmp(allStations,available{selected}));
 end
 startID=ids(1);

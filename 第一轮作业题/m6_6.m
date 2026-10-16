@@ -1,4 +1,3 @@
-%%逐行扫描餐盘左右边缘,累加每行像素数
 clearvars
 photo=imread('餐盘.jpg');
 data=double(photo);
@@ -33,7 +32,6 @@ for row=380:675
         end
     end
 end
-%黑色参考物面积100cm^2,按像素面积比例换算。
 areaCm2=100*trayPixels/cardPixels;
 disp(areaCm2)
 figure
@@ -42,4 +40,3 @@ axis image
 hold on
 plot([left,fliplr(right),left(1)],[rows,fliplr(rows),rows(1)],'m-')
 title('餐盘面积')
-

@@ -1,4 +1,3 @@
-%%旋转矩阵封装在文件末尾,主程序采用不同线型
 clearvars
 styles={'-.','--','-'};
 result=zeros(3,3);
@@ -12,7 +11,6 @@ end
 legend('3','4','5')
 axis([0,12,0.45,1.05])
 grid on
-%三列:边数、高度极差、按水平路程平均的高度标准差。
 disp(result)
 
 function [x,y,spread]=rolling_wheel(n,distance)
@@ -36,4 +34,3 @@ average=trapz(arc(1,:),arc(2,:))/(2*b);
 variance=trapz(arc(1,:),(arc(2,:)-average).^2)/(2*b);
 spread=[1-a,sqrt(variance)];
 end
-

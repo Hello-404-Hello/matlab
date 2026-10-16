@@ -1,5 +1,3 @@
-% 模3余数直算。
-% 输入为大于8的整数，输出每组[3的系数,5的系数]。
 number=29;
 [x,y]=decompose35_mod(number);
 disp([x y]);

@@ -1,8 +1,3 @@
-% 直接用fminsearch最小化加权距离，随后利用凸性条件认证并校正尖点。
-% 住宅区序号依次是锦绣华城、丽景家园、悦湖公馆、响水湾小区。
-% 公园只排除给定点(6,4)。
-% 输出：理论最优坐标；最小加权距离；四候选点的总距离；
-% [最优候选序号,x,y,总距离]。
 points=[1,3;5,7;8,2;4,5];
 people=[1200;2800;1600;3400];
 cost=@(z)sum(people.*sqrt((points(:,1)-z(1)).^2+(points(:,2)-z(2)).^2));
@@ -10,7 +5,6 @@ initial=(people'*points)/sum(people);
 setting=optimset('Display','off','TolX',1e-11,'TolFun',1e-9,...
     'MaxIter',3000,'MaxFunEvals',10000);
 position=fminsearch(cost,initial,setting);
-% 距离函数在住宅区坐标处不可微，直接核对次梯度可给出全局证明。
 for i=1:4
     rest=setdiff(1:4,i);
     dx=points(i,1)-points(rest,1);

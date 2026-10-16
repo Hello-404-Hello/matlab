@@ -53,11 +53,17 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
     scripts.push({name,type:"file",download_url:`https://raw.test/${name}`});
   }
   const imageBytes = Buffer.from([0xff,0xd8,0xff,0x00,0x11]);
+  const supportFiles = new Map([
+    ["餐盘.jpg",{rawName:"tray.jpg",bytes:imageBytes}],
+    ["碱基对.txt",{rawName:"bases.txt",bytes:Buffer.from("上链\nACGT\n下链\nTGCA\n","utf8")}],
+    ["手机号.xlsx",{rawName:"phones.xlsx",bytes:Buffer.from([0x50,0x4b,0x03,0x04,0x00,0x01])}]
+  ]);
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (input, init = {}) => {
     const url = new URL(input instanceof Request ? input.url : input);
     if (url.hostname === "raw.test") {
-      if (url.pathname === "/tray.jpg") return new Response(imageBytes);
+      const asset = [...supportFiles.values()].find(file => `/${file.rawName}` === url.pathname);
+      if (asset) return new Response(asset.bytes);
       const source = url.pathname.slice(1);
       return new Response(`disp('${source}')\n`, {status:200});
     }
@@ -71,8 +77,9 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
       return Response.json({content:{sha:currentSha}}, {status:200});
     }
     if (path === folder && (!init.method || init.method === "GET")) return Response.json(scripts);
-    if (path === `${folder}/餐盘.jpg` && (!init.method || init.method === "GET")) {
-      return Response.json({download_url:"https://raw.test/tray.jpg"});
+    if (path.startsWith(`${folder}/`) && (!init.method || init.method === "GET")) {
+      const file = supportFiles.get(path.slice(folder.length + 1));
+      if (file) return Response.json({download_url:`https://raw.test/${file.rawName}`});
     }
     if (path === "web/download-counts.md" && (!init.method || init.method === "GET")) {
       return Response.json({content:Buffer.from(countDocument).toString("base64"),sha:currentSha});
@@ -93,10 +100,12 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
     assert.equal(downloadResponse.status,200);
     assert.match(downloadResponse.headers.get("Content-Type"),/application\/zip/);
     const files = zipNames(Buffer.from(await downloadResponse.arrayBuffer()));
-    assert.equal(files.length,19);
+    assert.equal(files.length,21);
     for (let question = 1; question <= 18; question++) assert.ok(files.some(file => file.name === `${folder}/m${question}.m`));
-    assert.ok(files.some(file => file.name === `${folder}/餐盘.jpg`));
-    assert.deepEqual(files.find(file => file.name === `${folder}/餐盘.jpg`).payload,imageBytes);
+    for (const [name,file] of supportFiles) {
+      assert.ok(files.some(entry => entry.name === `${folder}/${name}`));
+      assert.deepEqual(files.find(entry => entry.name === `${folder}/${name}`).payload,file.bytes);
+    }
     assert.match(files.find(file => file.name === `${folder}/m3.m`).payload.toString("utf8"),/m3_2\.m/);
     assert.match(countDocument,/\| m3_2\.m \| 1 \|/);
     assert.equal((countDocument.match(/^\|\s*m\d+_\d+\.m\s*\|\s*1\s*\|$/gm) || []).length,18);

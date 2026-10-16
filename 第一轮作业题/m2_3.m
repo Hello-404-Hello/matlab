@@ -1,4 +1,3 @@
-%%用逻辑标记记录要保留的位置
 clearvars
 x=1000:-1:1;
 keep=false(size(x));
@@ -12,4 +11,3 @@ end
 answer=x(keep);
 disp(answer)
 disp(sum(keep))
-

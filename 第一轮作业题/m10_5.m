@@ -1,12 +1,10 @@
-% 配对表双循环。
-% 两链按位置对齐，示例第4、11位错误；输出错误位置，全对输出0。
-first='ATGCCGTATAGCGTACGATC';
-second='TACGGCATATCGCATGCTAG';
-second([4 11])='AU';
+basePairLines=readlines('碱基对.txt');
+first=char(basePairLines(2));
+second=char(basePairLines(4));
 left='ATGC';
 right='TACG';
-correct=false(1,max(numel(first),numel(second)));
-for position=1:min(numel(first),numel(second))
+correct=false(1,numel(first));
+for position=1:numel(first)
     for rule=1:4
         if first(position)==left(rule)&&second(position)==right(rule)
             correct(position)=true;
