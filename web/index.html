@@ -41,6 +41,19 @@
       </div>
     </section>
 
+    <dialog id="ai-prompt-dialog" class="ai-dialog" aria-labelledby="ai-dialog-title" aria-describedby="ai-dialog-copy">
+      <div class="ai-dialog-content">
+        <p class="ai-dialog-kicker">下载已开始</p>
+        <h2 id="ai-dialog-title">你抽到的降重AI是：</h2>
+        <p id="ai-model" class="ai-dialog-model"></p>
+        <p id="ai-dialog-copy" class="ai-dialog-copy">请使用你抽到的AI模型和 README 中的降重 Prompt 进行降重。</p>
+        <div class="ai-dialog-actions">
+          <a class="ai-dialog-link" href="https://github.com/Hello-404-Hello/matlab/blob/main/README.md" target="_blank" rel="noreferrer">打开 README 中的降重 Prompt ↗</a>
+          <form method="dialog"><button class="ai-dialog-close" type="submit" autofocus>知道了</button></form>
+        </div>
+      </div>
+    </dialog>
+
     <section class="overview" aria-label="解法库概况">
       <div class="overview-label"><span class="live-dot"></span> 仓库实时版本</div>
       <div class="overview-stat"><strong id="problem-total">18</strong><span>道题目</span></div>

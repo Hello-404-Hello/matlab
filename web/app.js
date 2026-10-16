@@ -8,6 +8,9 @@
   const button = document.getElementById("download-button");
   const status = document.getElementById("download-status");
   const grid = document.getElementById("problem-grid");
+  const aiDialog = document.getElementById("ai-prompt-dialog");
+  const aiModel = document.getElementById("ai-model");
+  const aiModels = ["豆包", "千问", "Kimi", "Deepseek", "混元", "GLM", "ChatGPT", "Gemini"];
   let state = null;
 
   function setStatus(message, kind = "") {
@@ -114,6 +117,9 @@
       setTimeout(() => URL.revokeObjectURL(url),60000);
       const selected = response.headers.get("X-Selected-Solutions");
       setStatus(selected ? `已下载；本包抽中的版本：${selected}` : "已生成并下载随机解法包。", "success");
+      aiModel.textContent = aiModels[Math.floor(Math.random()*aiModels.length)];
+      if (typeof aiDialog.showModal === "function") aiDialog.showModal();
+      else window.alert(`你抽到的降重AI是：${aiModel.textContent}\n请使用你抽到的AI模型和 README 中的降重 Prompt 进行降重。`);
       await loadCounts();
       button.disabled = false;
     } catch (error) {
