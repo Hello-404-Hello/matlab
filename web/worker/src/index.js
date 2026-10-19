@@ -118,7 +118,7 @@ async function loadRepoState(env) {
   if (!Array.isArray(listing)) throw new Error("GitHub 题目目录读取失败");
   const files = listing.filter(file => file.type === "file" && file.name.endsWith(".m"))
     .map(file => {
-      const match = file.name.match(/^m(1[0-8]|[1-9])_(\d+)\.m$/);
+      const match = file.name.match(/^Q(1[0-8]|[1-9])_(\d+)\.m$/);
       return match ? {number:Number(match[1]),version:Number(match[2]),name:file.name,url:file.download_url} : null;
     }).filter(Boolean);
   return {files,countsDoc:countDoc};
@@ -144,7 +144,7 @@ function decodeBase64(value) {
 function parseCounts(text) {
   const counts = new Map();
   for (const line of text.split(/\r?\n/)) {
-    const match = line.match(/^\|\s*(m(?:1[0-8]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$/);
+    const match = line.match(/^\|\s*(Q(?:1[0-8]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$/);
     if (match) counts.set(match[1], Number(match[2]));
   }
   return counts;
@@ -152,8 +152,8 @@ function parseCounts(text) {
 
 function sortSolutionNames(names) {
   return [...names].sort((left,right) => {
-    const a = left.match(/^m(\d+)_(\d+)\.m$/).slice(1).map(Number);
-    const b = right.match(/^m(\d+)_(\d+)\.m$/).slice(1).map(Number);
+    const a = left.match(/^Q(\d+)_(\d+)\.m$/).slice(1).map(Number);
+    const b = right.match(/^Q(\d+)_(\d+)\.m$/).slice(1).map(Number);
     return a[0]-b[0] || a[1]-b[1];
   });
 }
@@ -218,7 +218,7 @@ async function incrementCounts(env, selectedNames) {
     const updatedAt = new Date().toISOString();
     const totals = Array(QUESTION_COUNT).fill(0);
     for (const [name,count] of counts) {
-      const match = name.match(/^m(1[0-8]|[1-9])_\d+\.m$/);
+      const match = name.match(/^Q(1[0-8]|[1-9])_\d+\.m$/);
       if (match) totals[Number(match[1])-1] += count;
     }
     const lines = [

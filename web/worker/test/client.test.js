@@ -27,7 +27,7 @@ test("site loads and packages locally when the Worker is unreachable", async () 
   const requested = [];
   let downloadedBlob;
   const files = new Map([
-    ...Array.from({length:18},(_,index) => [`m${index+1}_1.m`,`script-${index+1}`]),
+    ...Array.from({length:18},(_,index) => [`Q${index+1}_1.m`,`script-${index+1}`]),
     ["餐盘.jpg","image-bytes"],
     ["碱基对.txt","base-pairs"],
     ["手机号.xlsx","workbook-bytes"]
@@ -35,7 +35,7 @@ test("site loads and packages locally when the Worker is unreachable", async () 
   const manifest = {updatedAt:"2026-01-01T00:00:00Z",questions:Array.from({length:18},(_,index) => ({
     number:index+1,
     downloadCount:0,
-    variants:[{file:`m${index+1}_1.m`,downloadCount:0}]
+    variants:[{file:`Q${index+1}_1.m`,downloadCount:0}]
   }))};
   const getElement = id => {
     if (!elements.has(id)) elements.set(id,{textContent:"",className:"",innerHTML:"",disabled:true,showModal(){this.open=true;},addEventListener(type,handler){this.listeners ||= {};this.listeners[type]=handler;}});
@@ -76,7 +76,7 @@ test("site loads and packages locally when the Worker is unreachable", async () 
   assert.ok(["豆包","千问","Kimi","Deepseek","混元","GLM","ChatGPT","Gemini"].includes(getElement("ai-model").textContent));
   const names = readZipNames(Buffer.from(await downloadedBlob.arrayBuffer()));
   assert.equal(names.length,21);
-  for (let number = 1; number <= 18; number++) assert.ok(names.includes(`第一轮作业题/m${number}.m`));
+  for (let number = 1; number <= 18; number++) assert.ok(names.includes(`第一轮作业题/Q${number}.m`));
   for (const name of ["餐盘.jpg","碱基对.txt","手机号.xlsx"]) assert.ok(names.includes(`第一轮作业题/${name}`));
   assert.equal(requested.filter(path => path === "/matlab/manifest.json").length,1);
   assert.ok(requested.every(path => path.startsWith("/matlab/")));

@@ -32,12 +32,12 @@ def build_solution_bundle():
     solution_output.mkdir(parents=True, exist_ok=True)
 
     count_text = (WEB / "download-counts.md").read_text(encoding="utf-8")
-    counts = {name: int(count) for name, count in re.findall(r"^\|\s*(m(?:1[0-8]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$", count_text, re.M)}
+    counts = {name: int(count) for name, count in re.findall(r"^\|\s*(Q(?:1[0-8]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$", count_text, re.M)}
     updated = re.search(r"^最后更新：(.+)$", count_text, re.M)
     questions = []
 
     for number, title in enumerate(TITLES, start=1):
-        pattern = re.compile(rf"^m{number}_(\d+)\.m$")
+        pattern = re.compile(rf"^Q{number}_(\d+)\.m$")
         variants = []
         for source in QUESTION_FOLDER.iterdir():
             match = pattern.match(source.name)

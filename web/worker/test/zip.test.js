@@ -18,7 +18,7 @@ function crc32(bytes) {
 
 test("browser ZIP writer stores UTF-8 paths and intact file bytes", async () => {
   const entries = [
-    {name:"第一轮作业题/m1.m",data:new TextEncoder().encode("disp('hello')")},
+    {name:"第一轮作业题/Q1.m",data:new TextEncoder().encode("disp('hello')")},
     {name:"第一轮作业题/碱基对.txt",data:new TextEncoder().encode("上链\nACGT\n")}
   ];
   const archive = Buffer.from(await window.MatlabZip.create(entries).arrayBuffer());

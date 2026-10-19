@@ -95,7 +95,7 @@
       return {number:question.number, file:variants[Math.floor(Math.random()*variants.length)].file};
     });
     const scripts = selected.map(async item => ({
-      name:`第一轮作业题/m${item.number}.m`,
+      name:`第一轮作业题/Q${item.number}.m`,
       data:await readSolution(item.file)
     }));
     const attachments = ["餐盘.jpg", "碱基对.txt", "手机号.xlsx"].map(async name => ({
