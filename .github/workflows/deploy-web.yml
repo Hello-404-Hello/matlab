@@ -8,6 +8,7 @@ on:
       - "!web/download-counts.md"
       - "第一轮作业题/*.m"
       - "第一轮作业题/餐盘.jpg"
+      - "第一轮作业题/A*.png"
       - "第一轮作业题/碱基对.txt"
       - "第一轮作业题/手机号.xlsx"
       - ".github/workflows/deploy-web.yml"

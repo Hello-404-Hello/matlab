@@ -17,4 +17,4 @@ GitHub Pages 只托管静态网页，不能安全地保存 GitHub 写入凭证�
 3. 在 `web/worker` 目录运行 `npx wrangler secret put GITHUB_TOKEN`，在终端提示中粘贴 token。Worker 随后可以读取当前解法列表，并只更新 `web/download-counts.md`。
 4. 部署完成后，Wrangler 会显示 `workers.dev` 地址。在 `config.js` 将 `window.MATLAB_COUNTER_API` 设为该地址（例如 `https://matlab-homework-counter.<你的子域>.workers.dev`），提交到 `main`。GitHub Actions 会自动更新网页。
 
-完成以上设置后，页面会在后台尝试同步最新计数；每次打包后也会尝试给实际抽中的 18 个版本各加 1。Worker 无法连接时，页面和下载不受影响，但计数会保留在最近发布的快照。Worker 并发更新遇到文件冲突时会重新读取后再提交。
+完成以上设置后，页面会在后台尝试同步最新计数；每次打包后也会尝试给实际抽中的 22 个版本各加 1。Worker 无法连接时，页面和下载不受影响，但计数会保留在最近发布的快照。Worker 并发更新遇到文件冲突时会重新读取后再提交。

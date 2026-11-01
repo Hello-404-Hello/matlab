@@ -3,7 +3,8 @@
   const titles = [
     "随机矩阵乘法", "倒序序列删数", "MATLAB 变量名", "多边形车轮", "八方向求和", "餐盘面积",
     "购买任务", "分解为 3 和 5", "手机号三连号", "DNA 配对", "虚位密码锁", "随机车牌",
-    "地铁计费", "随机帐篷安排", "网格连通", "区间售票", "灯光分布", "快递站选址"
+    "地铁计费", "随机帐篷安排", "网格连通", "区间售票", "灯光分布", "快递站选址",
+    "汉字找不同", "生物分类", "24 点求解", "最短燃气管网"
   ];
   const button = document.getElementById("download-button");
   const status = document.getElementById("download-status");
@@ -24,7 +25,7 @@
 
   function render(data) {
     state = data;
-    const questions = Array.from({length:18}, (_, index) => {
+    const questions = Array.from({length:22}, (_, index) => {
       const number = index + 1;
       const actual = (data.questions || []).find(item => item.number === number) || {number, variants:[], downloadCount:0};
       actual.variants = (actual.variants || []).slice().sort((a,b) => versionNumber(a.file)-versionNumber(b.file));
@@ -34,7 +35,7 @@
     const downloads = questions.reduce((sum, question) => sum + question.variants.reduce((n, variant) => n + (variant.downloadCount || 0), 0), 0);
     document.getElementById("problem-total").textContent = questions.length;
     document.getElementById("variant-total").textContent = variants;
-    document.getElementById("download-total").textContent = Math.floor(downloads / 18).toLocaleString("zh-CN");
+    document.getElementById("download-total").textContent = Math.floor(downloads / 22).toLocaleString("zh-CN");
     document.getElementById("updated-at").textContent = data.updatedAt ? `统计更新 ${formatTime(data.updatedAt)}` : "计数文件已同步";
     grid.innerHTML = questions.map(question => {
       const versionChips = question.variants.length
@@ -98,7 +99,7 @@
       name:`第一轮作业题/Q${item.number}.m`,
       data:await readSolution(item.file)
     }));
-    const attachments = ["餐盘.jpg", "碱基对.txt", "手机号.xlsx"].map(async name => ({
+    const attachments = ["餐盘.jpg", "碱基对.txt", "手机号.xlsx", "A1.png", "A2.png"].map(async name => ({
       name:`第一轮作业题/${name}`,
       data:await readSolution(name)
     }));

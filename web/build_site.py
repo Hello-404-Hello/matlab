@@ -11,9 +11,10 @@ QUESTION_FOLDER = ROOT / "第一轮作业题"
 TITLES = [
     "随机矩阵乘法", "倒序序列删数", "MATLAB 变量名", "多边形车轮", "八方向求和", "餐盘面积",
     "购买任务", "分解为 3 和 5", "手机号三连号", "DNA 配对", "虚位密码锁", "随机车牌",
-    "地铁计费", "随机帐篷安排", "网格连通", "区间售票", "灯光分布", "快递站选址"
+    "地铁计费", "随机帐篷安排", "网格连通", "区间售票", "灯光分布", "快递站选址",
+    "汉字找不同", "生物分类", "24 点求解", "最短燃气管网"
 ]
-SUPPORT_FILES = ["餐盘.jpg", "碱基对.txt", "手机号.xlsx"]
+SUPPORT_FILES = ["餐盘.jpg", "碱基对.txt", "手机号.xlsx", "A1.png", "A2.png"]
 
 
 def main():
@@ -32,7 +33,7 @@ def build_solution_bundle():
     solution_output.mkdir(parents=True, exist_ok=True)
 
     count_text = (WEB / "download-counts.md").read_text(encoding="utf-8")
-    counts = {name: int(count) for name, count in re.findall(r"^\|\s*(Q(?:1[0-8]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$", count_text, re.M)}
+    counts = {name: int(count) for name, count in re.findall(r"^\|\s*(Q(?:2[0-2]|1[0-9]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$", count_text, re.M)}
     updated = re.search(r"^最后更新：(.+)$", count_text, re.M)
     questions = []
 

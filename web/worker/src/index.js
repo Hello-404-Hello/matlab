@@ -1,10 +1,11 @@
-const QUESTION_COUNT = 18;
+const QUESTION_COUNT = 22;
 const COUNTS_PATH = "web/download-counts.md";
 const QUESTION_FOLDER = "第一轮作业题";
 const QUESTION_TITLES = [
   "随机矩阵乘法", "倒序序列删数", "MATLAB 变量名", "多边形车轮", "八方向求和", "餐盘面积",
   "购买任务", "分解为 3 和 5", "手机号三连号", "DNA 配对", "虚位密码锁", "随机车牌",
-  "地铁计费", "随机帐篷安排", "网格连通", "区间售票", "灯光分布", "快递站选址"
+  "地铁计费", "随机帐篷安排", "网格连通", "区间售票", "灯光分布", "快递站选址",
+    "汉字找不同", "生物分类", "24 点求解", "最短燃气管网"
 ];
 const encoder = new TextEncoder();
 
@@ -118,7 +119,7 @@ async function loadRepoState(env) {
   if (!Array.isArray(listing)) throw new Error("GitHub 题目目录读取失败");
   const files = listing.filter(file => file.type === "file" && file.name.endsWith(".m"))
     .map(file => {
-      const match = file.name.match(/^Q(1[0-8]|[1-9])_(\d+)\.m$/);
+      const match = file.name.match(/^Q(2[0-2]|1[0-9]|[1-9])_(\d+)\.m$/);
       return match ? {number:Number(match[1]),version:Number(match[2]),name:file.name,url:file.download_url} : null;
     }).filter(Boolean);
   return {files,countsDoc:countDoc};
@@ -144,7 +145,7 @@ function decodeBase64(value) {
 function parseCounts(text) {
   const counts = new Map();
   for (const line of text.split(/\r?\n/)) {
-    const match = line.match(/^\|\s*(Q(?:1[0-8]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$/);
+    const match = line.match(/^\|\s*(Q(?:2[0-2]|1[0-9]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$/);
     if (match) counts.set(match[1], Number(match[2]));
   }
   return counts;
@@ -198,7 +199,7 @@ async function fetchPackageFiles(env, selected) {
     return {name:`${QUESTION_FOLDER}/${finalName}`,data};
   });
   const scriptEntries = await Promise.all(requests);
-  const supportFiles = ["餐盘.jpg","碱基对.txt","手机号.xlsx"];
+  const supportFiles = ["餐盘.jpg","碱基对.txt","手机号.xlsx", "A1.png", "A2.png"];
   const supportEntries = await Promise.all(supportFiles.map(async name => {
     const fileResponse = await githubResponse(env, contentsUrl(env, `${QUESTION_FOLDER}/${name}`));
     const fileInfo = await fileResponse.json();
@@ -218,7 +219,7 @@ async function incrementCounts(env, selectedNames) {
     const updatedAt = new Date().toISOString();
     const totals = Array(QUESTION_COUNT).fill(0);
     for (const [name,count] of counts) {
-      const match = name.match(/^Q(1[0-8]|[1-9])_\d+\.m$/);
+      const match = name.match(/^Q(2[0-2]|1[0-9]|[1-9])_\d+\.m$/);
       if (match) totals[Number(match[1])-1] += count;
     }
     const lines = [

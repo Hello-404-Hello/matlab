@@ -47,7 +47,7 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
   let countDocument = "# 解法下载次数\n\n| 解法文件 | 下载次数 |\n|---|---:|\n";
   let currentSha = "counts-sha-1";
   const scripts = [];
-  for (let question = 1; question <= 18; question++) {
+  for (let question = 1; question <= 22; question++) {
     const version = question === 3 ? 2 : 1;
     const name = `Q${question}_${version}.m`;
     scripts.push({name,type:"file",download_url:`https://raw.test/${name}`});
@@ -55,6 +55,8 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
   const imageBytes = Buffer.from([0xff,0xd8,0xff,0x00,0x11]);
   const supportFiles = new Map([
     ["餐盘.jpg",{rawName:"tray.jpg",bytes:imageBytes}],
+    ["A1.png",{rawName:"A1.png",bytes:imageBytes}],
+    ["A2.png",{rawName:"A2.png",bytes:imageBytes}],
     ["碱基对.txt",{rawName:"bases.txt",bytes:Buffer.from("上链\nACGT\n下链\nTGCA\n","utf8")}],
     ["手机号.xlsx",{rawName:"phones.xlsx",bytes:Buffer.from([0x50,0x4b,0x03,0x04,0x00,0x01])}]
   ]);
@@ -92,7 +94,7 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
     const countsResponse = await worker.fetch(new Request("https://worker.test/counts", {headers:{Origin:origin}}), env);
     assert.equal(countsResponse.status,200,await countsResponse.clone().text());
     const counts = await countsResponse.json();
-    assert.equal(counts.questions.length,18);
+    assert.equal(counts.questions.length,22);
     assert.equal(counts.questions[2].variants[0].file,"Q3_2.m");
     assert.equal(counts.questions[2].variants[0].downloadCount,0);
 
@@ -100,17 +102,17 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
     assert.equal(downloadResponse.status,200);
     assert.match(downloadResponse.headers.get("Content-Type"),/application\/zip/);
     const files = zipNames(Buffer.from(await downloadResponse.arrayBuffer()));
-    assert.equal(files.length,21);
-    for (let question = 1; question <= 18; question++) assert.ok(files.some(file => file.name === `${folder}/Q${question}.m`));
+    assert.equal(files.length,27);
+    for (let question = 1; question <= 22; question++) assert.ok(files.some(file => file.name === `${folder}/Q${question}.m`));
     for (const [name,file] of supportFiles) {
       assert.ok(files.some(entry => entry.name === `${folder}/${name}`));
       assert.deepEqual(files.find(entry => entry.name === `${folder}/${name}`).payload,file.bytes);
     }
     assert.match(files.find(file => file.name === `${folder}/Q3.m`).payload.toString("utf8"),/Q3_2\.m/);
     assert.match(countDocument,/\| Q3_2\.m \| 1 \|/);
-    assert.equal((countDocument.match(/^\|\s*Q\d+_\d+\.m\s*\|\s*1\s*\|$/gm) || []).length,18);
+    assert.equal((countDocument.match(/^\|\s*Q\d+_\d+\.m\s*\|\s*1\s*\|$/gm) || []).length,22);
 
-    const selected = Array.from({length:18},(_,index) => `Q${index+1}_${index===2 ? 2 : 1}.m`);
+    const selected = Array.from({length:22},(_,index) => `Q${index+1}_${index===2 ? 2 : 1}.m`);
     const recordResponse = await worker.fetch(new Request("https://worker.test/record", {method:"POST",headers:{Origin:origin,"Content-Type":"application/json"},body:JSON.stringify({files:selected})}), env);
     assert.equal(recordResponse.status,200,await recordResponse.clone().text());
     assert.match(countDocument,/\| Q3_2\.m \| 2 \|/);
