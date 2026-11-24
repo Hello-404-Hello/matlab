@@ -22,23 +22,26 @@ function readZipNames(archive) {
   return names;
 }
 
-test("site loads and packages locally when the Worker is unreachable", async () => {
+test("both rounds package locally, with no scripts substituted for round two GUI files", async () => {
   const elements = new Map();
   const requested = [];
   let downloadedBlob;
-  const files = new Map([
-    ...Array.from({length:22},(_,index) => [`Q${index+1}_1.m`,`script-${index+1}`]),
-    ["餐盘.jpg","image-bytes"],
-    ["A1.png","a1-bytes"],
-    ["A2.png","a2-bytes"],
-    ["碱基对.txt","base-pairs"],
-    ["手机号.xlsx","workbook-bytes"]
-  ]);
-  const manifest = {updatedAt:"2026-01-01T00:00:00Z",questions:Array.from({length:22},(_,index) => ({
-    number:index+1,
-    downloadCount:0,
-    variants:[{file:`Q${index+1}_1.m`,downloadCount:0}]
-  }))};
+  const makeManifest = (folder, assetDirectory, count, attachments, apps = []) => ({
+    folder, assetDirectory, attachments, updatedAt:null,
+    questions:Array.from({length:count},(_,index) => {
+      const number = index+1;
+      const extension = apps.includes(number) ? "mlapp" : "m";
+      return {number,title:`题 ${number}`,downloadCount:0,variants:[
+        {file:`Q${number}_1.${extension}`,downloadName:`Q${number}.${extension}`,downloadCount:0}
+      ]};
+    })
+  });
+  const manifest = makeManifest("第一轮作业题","solutions",22,["餐盘.jpg","碱基对.txt","手机号.xlsx","A1.png","A2.png"]);
+  const second = makeManifest("第二轮作业题","round2-solutions",18,["ps.jpg","pt.xlsx","Roster.xlsx","Temp2.xlsx"],[5,17]);
+  const assets = new Set([manifest,second].flatMap(m => [
+    ...m.questions.map(q => `/matlab/${m.assetDirectory}/${q.variants[0].file}`),
+    ...m.attachments.map(file => `/matlab/${m.assetDirectory}/${file}`)
+  ]));
   const getElement = id => {
     if (!elements.has(id)) elements.set(id,{textContent:"",className:"",innerHTML:"",disabled:true,showModal(){this.open=true;},addEventListener(type,handler){this.listeners ||= {};this.listeners[type]=handler;}});
     return elements.get(id);
@@ -58,9 +61,9 @@ test("site loads and packages locally when the Worker is unreachable", async () 
     assert.equal(url.origin,"https://site.test","page must not need a cross-origin service to start or download");
     requested.push(url.pathname);
     if (url.pathname === "/matlab/manifest.json") return Response.json(manifest);
-    const filename = decodeURIComponent(url.pathname.split("/").at(-1));
-    assert.ok(files.has(filename),`unexpected static asset ${filename}`);
-    return new Response(files.get(filename));
+    if (url.pathname === "/matlab/round2-manifest.json") return Response.json(second);
+    assert.ok(assets.has(decodeURIComponent(url.pathname)),`unexpected static asset ${url.pathname}`);
+    return new Response(url.pathname);
   };
   const window = {MATLAB_COUNTER_API:"",MatlabZip:null,alert(){throw new Error("unexpected alert fallback");}};
   const context = {window,document,fetch,URL:TestURL,TextEncoder,Uint8Array,DataView,Blob,Response,AbortController,clearTimeout, setTimeout(){return 1;}};
@@ -70,7 +73,7 @@ test("site loads and packages locally when the Worker is unreachable", async () 
 
   const button = getElement("download-button");
   assert.equal(button.disabled,false);
-  assert.match(getElement("download-status").textContent,/本站读取/);
+  assert.equal(getElement("download-button-round2").disabled,false);
   await button.listeners.click();
   assert.ok(downloadedBlob);
   assert.equal(downloadedBlob.type,"application/zip");
@@ -80,6 +83,16 @@ test("site loads and packages locally when the Worker is unreachable", async () 
   assert.equal(names.length,27);
   for (let number = 1; number <= 22; number++) assert.ok(names.includes(`第一轮作业题/Q${number}.m`));
   for (const name of ["餐盘.jpg","碱基对.txt","手机号.xlsx","A1.png","A2.png"]) assert.ok(names.includes(`第一轮作业题/${name}`));
+  await getElement("download-button-round2").listeners.click();
+  const secondNames = readZipNames(Buffer.from(await downloadedBlob.arrayBuffer()));
+  assert.equal(secondNames.length,22);
+  for (const q of second.questions) {
+    assert.ok(secondNames.includes(`${second.folder}/${q.variants[0].downloadName}`));
+  }
+  for (const file of second.attachments) assert.ok(secondNames.includes(`${second.folder}/${file}`));
+  assert.ok(secondNames.every(name => name.startsWith(second.folder + "/")));
+  assert.ok(!secondNames.some(name => /\/Q(?:5|17)\.m$/.test(name)));
   assert.equal(requested.filter(path => path === "/matlab/manifest.json").length,1);
+  assert.equal(requested.filter(path => path === "/matlab/round2-manifest.json").length,1);
   assert.ok(requested.every(path => path.startsWith("/matlab/")));
 });

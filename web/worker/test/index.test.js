@@ -122,3 +122,69 @@ test("GET lists live variants with missing counter rows at zero; POST builds a r
     globalThis.fetch = originalFetch;
   }
 });
+
+test("round two accepts only its designated app extensions and packages the canonical app bytes", async () => {
+  const roundFolder = "第二轮作业题";
+  const docs = new Map([["web/download-counts.md","unchanged"],["web/download-counts-round2.md",""]]);
+  const appNumbers = new Set([5,17]);
+  const assets = ["ps.jpg","pt.xlsx","Roster.xlsx","Temp2.xlsx"];
+  const names = Array.from({length:18},(_,index) => {
+    const n = index+1;
+    return `Q${n}_1.${appNumbers.has(n)?"mlapp":"m"}`;
+  });
+  const listing = [...names,"Q5_1.m","Q17_1.m","Q1_1.mlapp"].map(name => ({
+    name,type:"file",download_url:`https://raw.test/incorrect-if-app/${name}`
+  }));
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input, init = {}) => {
+    const url = new URL(input);
+    if (url.hostname === "raw.test") return new Response(url.pathname);
+    const path = decodeURIComponent(url.pathname.split("/contents/")[1]);
+    if (path === roundFolder) return Response.json(listing);
+    if (docs.has(path)) {
+      if (init.method === "PUT") {
+        docs.set(path,Buffer.from(JSON.parse(init.body).content,"base64").toString("utf8"));
+        return Response.json({});
+      }
+      return Response.json({content:Buffer.from(docs.get(path)).toString("base64"),sha:"s"});
+    }
+    for (const number of appNumbers) {
+      if (path === `${roundFolder}/打包应用/Q${number}_1/Q${number}.mlapp`) {
+        return Response.json({download_url:`https://raw.test/canonical/Q${number}.mlapp`});
+      }
+    }
+    for (const name of assets) {
+      if (path === `${roundFolder}/${name}`) {
+        return Response.json({download_url:`https://raw.test/attachments/${name}`});
+      }
+    }
+    return new Response("not found", {status:404});
+  };
+  const env = {GITHUB_OWNER:"owner",GITHUB_REPO:"repo",GITHUB_TOKEN:"test-token",SITE_ORIGIN:origin};
+  const request = (route, method = "GET", body) => new Request(`https://worker.test/${route}?round=2`, {
+    method,body:body&&JSON.stringify(body),headers:{Origin:origin}
+  });
+  try {
+    const response = await worker.fetch(request("counts"),env);
+    assert.equal(response.status,200);
+    const {questions} = await response.json();
+    assert.deepEqual(questions.flatMap(q => q.variants.map(v => v.file)),names);
+
+    const bad = names.map(name => name === "Q5_1.mlapp" ? "Q5_1.m" : name);
+    assert.equal((await worker.fetch(request("record","POST",{files:bad}),env)).status,400);
+    const zip = await worker.fetch(request("download","POST"),env);
+    assert.equal(zip.status,200);
+    const entries = zipNames(Buffer.from(await zip.arrayBuffer()));
+    assert.equal(entries.length,22);
+    for (const number of appNumbers) {
+      const name = `Q${number}.mlapp`;
+      assert.equal(entries.find(e => e.name === `${roundFolder}/${name}`).payload.toString(),`/canonical/${name}`);
+      assert.ok(!entries.some(e => e.name === `${roundFolder}/Q${number}.m`));
+    }
+    for (const name of assets) assert.ok(entries.some(e => e.name === `${roundFolder}/${name}`));
+    assert.equal(docs.get("web/download-counts.md"),"unchanged");
+    assert.match(docs.get("web/download-counts-round2.md"),/\| Q5_1\.mlapp \| 1 \|/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});

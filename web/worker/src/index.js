@@ -1,12 +1,5 @@
-const QUESTION_COUNT = 22;
-const COUNTS_PATH = "web/download-counts.md";
-const QUESTION_FOLDER = "第一轮作业题";
-const QUESTION_TITLES = [
-  "随机矩阵乘法", "倒序序列删数", "MATLAB 变量名", "多边形车轮", "八方向求和", "餐盘面积",
-  "购买任务", "分解为 3 和 5", "手机号三连号", "DNA 配对", "虚位密码锁", "随机车牌",
-  "地铁计费", "随机帐篷安排", "网格连通", "区间售票", "灯光分布", "快递站选址",
-    "汉字找不同", "生物分类", "24 点求解", "最短燃气管网"
-];
+import rounds from "../../rounds.json" with {type:"json"};
+
 const encoder = new TextEncoder();
 
 export default {
@@ -17,36 +10,40 @@ export default {
     if (request.method === "OPTIONS") return new Response(null, {status:204,headers:cors});
     if (!env.GITHUB_TOKEN) return json({error:"Worker 尚未配置 GitHub Token"}, 503, cors);
 
-    const path = new URL(request.url).pathname.replace(/\/+$/, "") || "/";
+    const url = new URL(request.url);
+    const path = url.pathname.replace(/\/+$/, "") || "/";
+    const roundId = url.searchParams.get("round") ?? "1";
+    if (!Object.hasOwn(rounds, roundId)) return json({error:"作业轮次不存在"}, 400, cors);
+    const round = rounds[roundId];
     try {
       if (request.method === "GET" && path === "/counts") {
-        const data = await loadRepoState(env);
-        return json(makeCountsResponse(data.files, data.countsDoc), 200, cors);
+        const data = await loadRepoState(env, round);
+        return json(makeCountsResponse(data.files, data.countsDoc, round), 200, cors);
       }
       if (request.method === "POST" && path === "/record") {
         const body = await request.json();
-        if (!Array.isArray(body.files) || body.files.length !== QUESTION_COUNT) {
+        if (!Array.isArray(body?.files) || body.files.length !== round.titles.length) {
           return json({error:"每题需要恰好提交一个解法版本"}, 400, cors);
         }
-        const data = await loadRepoState(env);
+        const data = await loadRepoState(env, round);
         const available = new Map(data.files.map(file => [file.name,file]));
         const selected = body.files.map(name => available.get(name));
         const questions = new Set(selected.filter(Boolean).map(file => file.number));
-        if (selected.some(file => !file) || questions.size !== QUESTION_COUNT) {
+        if (selected.some(file => !file) || questions.size !== round.titles.length) {
           return json({error:"解法版本无效或题目重复"}, 400, cors);
         }
-        const updated = await incrementCounts(env, body.files);
+        const updated = await incrementCounts(env, round, body.files);
         return json({updatedAt:updated.updatedAt}, 200, cors);
       }
       if (request.method === "POST" && path === "/download") {
-        const data = await loadRepoState(env);
-        const selected = chooseVersions(data.files);
-        const entries = await fetchPackageFiles(env, selected);
+        const data = await loadRepoState(env, round);
+        const selected = chooseVersions(data.files, round.titles.length);
+        const entries = await fetchPackageFiles(env, round, selected);
         const zip = makeZip(entries);
-        const updated = await incrementCounts(env, selected.map(item => item.name));
+        const updated = await incrementCounts(env, round, selected.map(item => item.name));
         const headers = new Headers(cors);
         headers.set("Content-Type", "application/zip");
-        headers.set("Content-Disposition", "attachment; filename=matlab-homework.zip; filename*=UTF-8''%E7%AC%AC%E4%B8%80%E8%BD%AE%E4%BD%9C%E4%B8%9A%E9%A2%98-%E9%9A%8F%E6%9C%BA%E8%A7%A3%E6%B3%95.zip");
+        headers.set("Content-Disposition", `attachment; filename=matlab-homework.zip; filename*=UTF-8''${encodeURIComponent(round.folder+"-随机解法.zip")}`);
         headers.set("Cache-Control", "no-store");
         headers.set("X-Selected-Solutions", selected.map(item => item.name).join(","));
         headers.set("X-Updated-At", updated.updatedAt);
@@ -110,23 +107,32 @@ async function githubResponse(env, url, options = {}) {
   return response;
 }
 
-async function loadRepoState(env) {
+function matchSolution(name, round) {
+  const match = typeof name === "string" && name.match(/^Q([1-9]\d*)_(\d+)\.(m|mlapp)$/);
+  if (!match) return null;
+  const number = Number(match[1]);
+  const extension = round.apps.includes(number) ? "mlapp" : "m";
+  return number <= round.titles.length && match[3] === extension
+    ? {number,version:Number(match[2]),downloadName:`Q${number}.${extension}`}
+    : null;
+}
+
+async function loadRepoState(env, round) {
   const [directoryResponse, countDoc] = await Promise.all([
-    githubResponse(env, contentsUrl(env, QUESTION_FOLDER)),
-    getCountDoc(env)
+    githubResponse(env, contentsUrl(env, round.folder)),
+    getCountDoc(env, round)
   ]);
   const listing = await directoryResponse.json();
   if (!Array.isArray(listing)) throw new Error("GitHub 题目目录读取失败");
-  const files = listing.filter(file => file.type === "file" && file.name.endsWith(".m"))
-    .map(file => {
-      const match = file.name.match(/^Q(2[0-2]|1[0-9]|[1-9])_(\d+)\.m$/);
-      return match ? {number:Number(match[1]),version:Number(match[2]),name:file.name,url:file.download_url} : null;
-    }).filter(Boolean);
+  const files = listing.flatMap(file => {
+    const match = file.type === "file" && matchSolution(file.name, round);
+    return match ? [{...match,name:file.name,url:file.download_url}] : [];
+  });
   return {files,countsDoc:countDoc};
 }
 
-async function getCountDoc(env) {
-  const response = await fetch(contentsUrl(env, COUNTS_PATH), {headers:githubHeaders(env)});
+async function getCountDoc(env, round) {
+  const response = await fetch(contentsUrl(env, `web/${round.counts}`), {headers:githubHeaders(env)});
   if (response.status === 404) return {text:"",sha:null};
   if (!response.ok) {
     const details = await response.text();
@@ -142,31 +148,28 @@ function decodeBase64(value) {
   return new TextDecoder().decode(bytes);
 }
 
-function parseCounts(text) {
+function parseCounts(text, round) {
   const counts = new Map();
   for (const line of text.split(/\r?\n/)) {
-    const match = line.match(/^\|\s*(Q(?:2[0-2]|1[0-9]|[1-9])_\d+\.m)\s*\|\s*(\d+)\s*\|$/);
-    if (match) counts.set(match[1], Number(match[2]));
+    const match = line.match(/^\|\s*(Q\d+_\d+\.(?:m|mlapp))\s*\|\s*(\d+)\s*\|$/);
+    if (match && matchSolution(match[1], round)) counts.set(match[1], Number(match[2]));
   }
   return counts;
 }
 
-function sortSolutionNames(names) {
-  return [...names].sort((left,right) => {
-    const a = left.match(/^Q(\d+)_(\d+)\.m$/).slice(1).map(Number);
-    const b = right.match(/^Q(\d+)_(\d+)\.m$/).slice(1).map(Number);
-    return a[0]-b[0] || a[1]-b[1];
-  });
+function sortSolutionNames(names, round) {
+  return [...names].map(name => ({...matchSolution(name, round),name}))
+    .sort((a,b) => a.number-b.number || a.version-b.version).map(item => item.name);
 }
 
-function makeCountsResponse(files, countDoc) {
-  const counts = parseCounts(countDoc.text);
-  const questions = Array.from({length:QUESTION_COUNT}, (_, index) => {
+function makeCountsResponse(files, countDoc, round) {
+  const counts = parseCounts(countDoc.text, round);
+  const questions = round.titles.map((title, index) => {
     const number = index + 1;
     const variants = files.filter(file => file.number === number)
       .sort((a,b) => a.version-b.version)
       .map(file => ({file:file.name,downloadCount:counts.get(file.name) || 0}));
-    return {number,downloadCount:variants.reduce((sum,item) => sum + item.downloadCount,0),variants};
+    return {number,title,downloadCount:variants.reduce((sum,item) => sum + item.downloadCount,0),variants};
   });
   const updated = countDoc.text.match(/^最后更新：(.+)$/m);
   return {questions,updatedAt:updated ? updated[1].trim() : null};
@@ -180,9 +183,9 @@ function secureRandomIndex(limit) {
   return values[0] % limit;
 }
 
-function chooseVersions(files) {
+function chooseVersions(files, count) {
   const selected = [];
-  for (let number = 1; number <= QUESTION_COUNT; number++) {
+  for (let number = 1; number <= count; number++) {
     const choices = files.filter(file => file.number === number);
     if (!choices.length) throw new Error(`第 ${number} 题暂时没有可下载的解法`);
     selected.push(choices[secureRandomIndex(choices.length)]);
@@ -190,37 +193,41 @@ function chooseVersions(files) {
   return selected;
 }
 
-async function fetchPackageFiles(env, selected) {
+async function getDownloadUrl(env, path) {
+  const response = await githubResponse(env, contentsUrl(env, path));
+  return (await response.json()).download_url;
+}
+
+async function fetchPackageFiles(env, round, selected) {
   const requests = selected.map(async solution => {
-    const response = await fetch(solution.url, {headers:{"Cache-Control":"no-cache"}});
+    const url = round.apps.includes(solution.number)
+      ? await getDownloadUrl(env, `${round.folder}/打包应用/${solution.name.replace(/\.mlapp$/, "")}/${solution.downloadName}`)
+      : solution.url;
+    const response = await fetch(url, {headers:{"Cache-Control":"no-cache"}});
     if (!response.ok) throw new Error(`下载 ${solution.name} 失败：${response.status}`);
     const data = new Uint8Array(await response.arrayBuffer());
-    const finalName = solution.name.replace(/_\d+(?=\.m$)/, "");
-    return {name:`${QUESTION_FOLDER}/${finalName}`,data};
+    return {name:`${round.folder}/${solution.downloadName}`,data};
   });
   const scriptEntries = await Promise.all(requests);
-  const supportFiles = ["餐盘.jpg","碱基对.txt","手机号.xlsx", "A1.png", "A2.png"];
-  const supportEntries = await Promise.all(supportFiles.map(async name => {
-    const fileResponse = await githubResponse(env, contentsUrl(env, `${QUESTION_FOLDER}/${name}`));
-    const fileInfo = await fileResponse.json();
-    const raw = await fetch(fileInfo.download_url, {headers:{"Cache-Control":"no-cache"}});
+  const supportEntries = await Promise.all(round.attachments.map(async name => {
+    const url = await getDownloadUrl(env, `${round.folder}/${name}`);
+    const raw = await fetch(url, {headers:{"Cache-Control":"no-cache"}});
     if (!raw.ok) throw new Error(`下载${name}失败：${raw.status}`);
-    return {name:`${QUESTION_FOLDER}/${name}`,data:new Uint8Array(await raw.arrayBuffer())};
+    return {name:`${round.folder}/${name}`,data:new Uint8Array(await raw.arrayBuffer())};
   }));
   scriptEntries.push(...supportEntries);
   return scriptEntries;
 }
 
-async function incrementCounts(env, selectedNames) {
+async function incrementCounts(env, round, selectedNames) {
   for (let attempt = 0; attempt < 5; attempt++) {
-    const doc = await getCountDoc(env);
-    const counts = parseCounts(doc.text);
+    const doc = await getCountDoc(env, round);
+    const counts = parseCounts(doc.text, round);
     for (const name of selectedNames) counts.set(name, (counts.get(name) || 0) + 1);
     const updatedAt = new Date().toISOString();
-    const totals = Array(QUESTION_COUNT).fill(0);
+    const totals = Array(round.titles.length).fill(0);
     for (const [name,count] of counts) {
-      const match = name.match(/^Q(2[0-2]|1[0-9]|[1-9])_\d+\.m$/);
-      if (match) totals[Number(match[1])-1] += count;
+      totals[matchSolution(name, round).number-1] += count;
     }
     const lines = [
       "# 解法下载次数",
@@ -232,18 +239,18 @@ async function incrementCounts(env, selectedNames) {
       "",
       "| 题号 | 题目 | 下载次数 |",
       "|---:|---|---:|",
-      ...QUESTION_TITLES.map((title,index) => `| ${index+1} | ${title} | ${totals[index]} |`),
+      ...round.titles.map((title,index) => `| ${index+1} | ${title} | ${totals[index]} |`),
       "",
       "## 各解法版本下载次数",
       "",
       "| 解法文件 | 下载次数 |",
       "|---|---:|",
-      ...sortSolutionNames(counts.keys()).map(name => `| ${name} | ${counts.get(name)} |`),
+      ...sortSolutionNames(counts.keys(), round).map(name => `| ${name} | ${counts.get(name)} |`),
       ""
     ];
     const bytes = encoder.encode(lines.join("\n"));
     const content = encodeBase64(bytes);
-    const result = await fetch(contentsUrl(env, COUNTS_PATH), {
+    const result = await fetch(contentsUrl(env, `web/${round.counts}`), {
       method:"PUT",
       headers:{...githubHeaders(env),"Content-Type":"application/json"},
       body:JSON.stringify({message:"Update MATLAB homework download counts",content,branch:env.GITHUB_BRANCH || "main",...(doc.sha ? {sha:doc.sha} : {})})

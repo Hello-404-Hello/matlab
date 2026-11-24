@@ -1,0 +1,76 @@
+{
+  "1": {
+    "folder": "第一轮作业题",
+    "manifest": "manifest.json",
+    "assetDirectory": "solutions",
+    "counts": "download-counts.md",
+    "titles": [
+      "随机矩阵乘法",
+      "倒序序列删数",
+      "MATLAB 变量名",
+      "多边形车轮",
+      "八方向求和",
+      "餐盘面积",
+      "购买任务",
+      "分解为 3 和 5",
+      "手机号三连号",
+      "DNA 配对",
+      "虚位密码锁",
+      "随机车牌",
+      "地铁计费",
+      "随机帐篷安排",
+      "网格连通",
+      "区间售票",
+      "灯光分布",
+      "快递站选址",
+      "汉字找不同",
+      "生物分类",
+      "24 点求解",
+      "最短燃气管网"
+    ],
+    "attachments": [
+      "餐盘.jpg",
+      "碱基对.txt",
+      "手机号.xlsx",
+      "A1.png",
+      "A2.png"
+    ],
+    "apps": []
+  },
+  "2": {
+    "folder": "第二轮作业题",
+    "manifest": "round2-manifest.json",
+    "assetDirectory": "round2-solutions",
+    "counts": "download-counts-round2.md",
+    "titles": [
+      "整数方程",
+      "四种图形",
+      "成绩排名",
+      "光平面标定",
+      "抽奖应用",
+      "半球体积",
+      "二元函数极小值",
+      "逐次稀释",
+      "水塔用水量",
+      "裴蜀方程",
+      "直口三角烧瓶",
+      "温度曲线与流速",
+      "火箭升空模型",
+      "斜面滑块动画",
+      "五子连线",
+      "红豆去除",
+      "翻卡片游戏",
+      "马吃国王"
+    ],
+    "attachments": [
+      "ps.jpg",
+      "pt.xlsx",
+      "Roster.xlsx",
+      "Temp2.xlsx"
+    ],
+    "apps": [
+      5,
+      17
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f6f3">
-  <meta name="description" content="随机打包 MATLAB 第一轮作业 22 道题的解法，并查看每个版本的下载次数。">
+  <meta name="description" content="分别下载 MATLAB 第一轮和第二轮作业的随机解法包，并查看各版本的下载次数。">
   <title>MATLAB 作业解法库</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
@@ -23,21 +23,33 @@
   <main id="top">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-dot"></span> 第一轮作业 · MATLAB</p>
+        <p class="eyebrow"><span class="eyebrow-dot"></span> 第一轮与第二轮 · MATLAB</p>
         <h1 id="hero-title">我既不是派蒙，<br>也不是欧门，<br>我是蒙多，<br><em>我想去哪就去哪</em></h1>
-        <p class="hero-description">从本站读取 22 道题的现有版本，逐题随机挑选一个解法，打包成可直接运行的作业文件夹。</p>
+        <p class="hero-description">选择一轮作业，每题随机抽取一个版本，连同对应附件打包下载。</p>
+        <div class="download-options">
+          <div>
         <button id="download-button" class="download-button" type="button" disabled>
           <span class="button-icon" aria-hidden="true">↓</span>
-          <span class="button-copy"><strong>随机打包下载</strong><small>22 道题 · 每题抽取 1 个版本</small></span>
+          <span class="button-copy"><strong>下载第一轮</strong><small>22 道题 · MATLAB 脚本</small></span>
           <span class="button-arrow" aria-hidden="true">↗</span>
         </button>
         <p id="download-status" class="download-status" role="status" aria-live="polite">正在读取本站解法…</p>
+          </div>
+          <div>
+        <button id="download-button-round2" class="download-button" type="button" disabled>
+          <span class="button-icon" aria-hidden="true">↓</span>
+          <span class="button-copy"><strong>下载第二轮</strong><small>18 道题 · 含 App Designer 应用</small></span>
+          <span class="button-arrow" aria-hidden="true">↗</span>
+        </button>
+        <p id="download-status-round2" class="download-status" role="status" aria-live="polite">正在读取本站解法…</p>
+          </div>
+        </div>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
         <div class="code-card card-back"><span class="code-top"><i></i><i></i><i></i></span><span class="code-line short"></span><span class="code-line"></span><span class="code-line medium"></span></div>
         <div class="code-card card-front"><span class="code-top"><i></i><i></i><i></i><b>Q12_4.m</b></span><span class="code-text"><i>01</i> <b>for</b> k = 1:22</span><span class="code-text"><i>02</i> &nbsp; version = <em>random</em>(…)</span><span class="code-text"><i>03</i> &nbsp; package.add(…)</span><span class="code-text"><i>04</i> <b>end</b></span><span class="code-cursor"></span></div>
-        <span class="art-stamp">22 <small>题</small></span>
+        <span class="art-stamp">40 <small>题</small></span>
         <span class="art-caption">一题一解 · 随机组合</span>
       </div>
     </section>
@@ -55,17 +67,17 @@
       </div>
     </dialog>
 
-    <section class="overview" aria-label="解法库概况">
-      <div class="overview-label"><span class="live-dot"></span> 本站解法版本</div>
+    <section class="overview" aria-label="第一轮概况">
+      <div class="overview-label"><span class="live-dot"></span> 第一轮作业</div>
       <div class="overview-stat"><strong id="problem-total">22</strong><span>道题目</span></div>
       <div class="overview-stat"><strong id="variant-total">—</strong><span>种解法</span></div>
       <div class="overview-stat"><strong id="download-total">—</strong><span>套下载</span></div>
       <div class="overview-time" id="updated-at">读取本站版本中</div>
     </section>
 
-    <section class="solutions-section" aria-labelledby="solutions-title">
+    <section class="solutions-section" id="round1" aria-labelledby="solutions-title">
       <div class="section-heading">
-        <div><p class="eyebrow">THE COLLECTION</p><h2 id="solutions-title">题目与下载统计</h2></div>
+        <div><h2 id="solutions-title">第一轮题目与下载统计</h2></div>
         <p class="section-note">下载整套压缩包时，每题会随机抽取一个解法。<br>计数服务可用时同步更新下载次数。</p>
       </div>
       <div id="problem-grid" class="problem-grid" aria-live="polite">
@@ -73,10 +85,28 @@
       </div>
     </section>
 
+    <section class="overview" aria-label="第二轮概况">
+      <div class="overview-label"><span class="live-dot"></span> 第二轮作业</div>
+      <div class="overview-stat"><strong id="problem-total-round2">18</strong><span>道题目</span></div>
+      <div class="overview-stat"><strong id="variant-total-round2">—</strong><span>种解法</span></div>
+      <div class="overview-stat"><strong id="download-total-round2">—</strong><span>套下载</span></div>
+      <div class="overview-time" id="updated-at-round2">读取本站版本中</div>
+    </section>
+
+    <section class="solutions-section" id="round2" aria-labelledby="solutions-title-round2">
+      <div class="section-heading">
+        <div><h2 id="solutions-title-round2">第二轮题目与下载统计</h2></div>
+        <p class="section-note">Q5、Q17 用 App Designer 打开，随包附上所需数据。</p>
+      </div>
+      <div id="problem-grid-round2" class="problem-grid" aria-live="polite">
+        <div class="loading-card">正在读取第二轮题目与版本…</div>
+      </div>
+    </section>
+
     <section class="note-strip">
       <span class="note-icon" aria-hidden="true">i</span>
-      <p>压缩包内文件名统一为 <code>Q1.m</code> 至 <code>Q22.m</code>，并附上 <code>餐盘.jpg</code>、<code>碱基对.txt</code>、<code>手机号.xlsx</code>、<code>A1.png</code> 和 <code>A2.png</code>。</p>
-      <a href="https://github.com/Hello-404-Hello/matlab/tree/main/第一轮作业题" target="_blank" rel="noreferrer">查看源文件 <span aria-hidden="true">↗</span></a>
+      <p>第二轮压缩包里的 GUI 文件为 <code>Q5.mlapp</code> 和 <code>Q17.mlapp</code>，其他题为 <code>Q题号.m</code>。</p>
+      <a href="https://github.com/Hello-404-Hello/matlab/tree/main/第二轮作业题" target="_blank" rel="noreferrer">查看第二轮源文件 <span aria-hidden="true">↗</span></a>
     </section>
   </main>
 

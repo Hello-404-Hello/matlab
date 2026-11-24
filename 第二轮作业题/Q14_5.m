@@ -1,0 +1,29 @@
+l=3.4;
+a=deg2rad(28);
+g=9.8;
+mu=.24;
+h=l*sin(a);
+base=l*cos(a);
+v=sqrt(2*g*h);
+t1=2*l/v;
+t2=v/(g*mu);
+t=linspace(0,t1+t2,112);
+along=.5*g*sin(a)*min(t,t1).^2;
+s=max(t-t1,0);
+x=along*cos(a)+v*s-g*mu*s.^2/2;
+y=(l-along)*sin(a);
+figure('Color','w')
+ax=axes;
+plot(ax,[0,base,x(end)+.45],[h,0,0],'LineWidth',2)
+hold(ax,'on')
+body=hgtransform(ax);
+patch('Parent',body,'XData',[-.18,.18,.18,-.18],'YData',[0,0,.30,.30],'FaceColor',[.74,.18,.16]);
+axis(ax,[-.5,x(end)+.6,-.25,h+.58])
+axis(ax,'equal')
+for i=1:length(t)
+    angle=-a*(t(i)<t1);
+    body.Matrix=makehgtform('translate',[x(i),y(i),0],'zrotate',angle);
+    drawnow limitrate
+    pause(.012)
+end
+disp([t1,t2,x(end)-base])
