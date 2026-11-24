@@ -1,5 +1,5 @@
-rng(13,'twister')
-fen=randi([0,100],60,3,3);
+stream=RandStream('mt19937ar','Seed',13);
+fen=randi(stream,101,[60,3,3])-1;
 a=fen(:,:,1);
 tong=paiming(a);
 tong.Properties.VariableNames={'ID','S1','S2','S3','Total','Rank'};

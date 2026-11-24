@@ -1,4 +1,7 @@
-x=readmatrix('Temp2.xlsx');
+file='Temp2.xlsx';
+opts=detectImportOptions(file);
+tab=readtable(file,opts);
+x=table2array(tab);
 n=size(x,1);
 r=zeros(101,1);
 for j=1:101
@@ -12,7 +15,7 @@ end
 k=p-51;
 fprintf('%d %.2f %.3f\n',1+(k<0),k/100,5/abs(k))
 figure
-plot((0:n-1)*.01,x(:,1),'--',(0:n-1)*.01,x(:,2),'-')
+stairs((0:n-1)*.01,x)
 legend('1','2')
 xlabel('s')
 grid on

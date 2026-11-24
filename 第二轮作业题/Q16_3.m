@@ -1,7 +1,7 @@
 pic=imread('ps.jpg');
 a=im2double(pic(:,:,2));
-d=imclose(a,strel('disk',29));
-mask=imopen(a<.64*d,strel('disk',2));
+d=medfilt2(a,[37,37],'symmetric');
+mask=imopen(a<.355*d,strel('disk',2));
 s=regionprops(mask,'PixelIdxList','MajorAxisLength','Area');
 bean=false(size(a));
 n=0;
@@ -13,7 +13,7 @@ for i=1:numel(s)
         n=n+1;
     end
 end
-bean=imdilate(imfill(bean,'holes'),strel('disk',3));
+bean=imdilate(imfill(bean,'holes'),strel('disk',5));
 y=pic;
 for k=1:size(pic,3)
     y(:,:,k)=regionfill(pic(:,:,k),bean);

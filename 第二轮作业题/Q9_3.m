@@ -7,9 +7,10 @@ for i=1:length(h)-1
 end
 disp([t',t'+1,u'])
 figure
-bar(t+.5,u,.94)
-xlabel('时刻（h）')
+bar(3:2:23,reshape(u,2,[])','grouped')
+xlabel('两小时区段的中点（h）')
 ylabel('每小时估算用水量（m³）')
-xticks(2:2:24)
+xticks(3:2:23)
 xlim([2,24])
 title('区间内均匀分配')
+legend('区段前一小时','区段后一小时')

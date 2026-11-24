@@ -1,16 +1,18 @@
-queen=[4,6];
-horse=[5,4];
-king=[5,8];
-can_take_queen=false;
+enemy=[5,8;4,6];
+start_rc=[5,4];
+target_rc=enemy(1,:);
+wall_rc=enemy(2,:);
+eat_queen=logical(0);
+
 n=8;
 board=false(n);
-board(horse(1),horse(2))=true;
+board(start_rc(1),start_rc(2))=true;
 seen=board;
 mask=true(n);
-if ~can_take_queen, mask(queen(1),queen(2))=false; end
+if ~eat_queen, mask(wall_rc(1),wall_rc(2))=false; end
 d=-1;
 for depth=0:63
-    if board(king(1),king(2))
+    if board(target_rc(1),target_rc(2))
         d=depth;
         break
     end

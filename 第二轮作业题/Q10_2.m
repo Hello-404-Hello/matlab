@@ -1,4 +1,6 @@
-a=267; b=36;
+pair=[267,36];
+a=pair(1);
+b=pair(2);
 u=[abs(a),1,0];
 v=[abs(b),0,1];
 while v(1)~=0

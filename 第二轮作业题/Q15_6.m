@@ -1,5 +1,8 @@
 rng(15)
-board=randi([0,1],50);
+board=zeros(50);
+for k=1:50
+    board(:,k)=randi(2,50,1)-1;
+end
 d=[1,0;0,1;1,1;1,-1];
 figure
 [r,c]=find(board);

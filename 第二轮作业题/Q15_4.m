@@ -1,5 +1,6 @@
-rng(15)
-b=randi([0,1],50);
+rng(15,'twister')
+seq=randi([0,1],2500,1);
+b=reshape(seq,50,50);
 e=[1,0;0,1;1,1;1,-1];
 mark=false(50);
 n=0;

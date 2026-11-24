@@ -1,7 +1,7 @@
 a=imread('ps.jpg');
 g=im2double(a(:,:,2));
-base=imclose(g,strel('disk',18));
-b=imopen(g<.7*base,strel('disk',2));
+base=imdilate(g,strel('square',29));
+b=imopen(g<.28*base,strel('disk',2));
 s=regionprops(b,'Area','MajorAxisLength','PixelIdxList');
 keep=false(size(g));
 for j=1:length(s)
@@ -9,7 +9,8 @@ for j=1:length(s)
         keep(s(j).PixelIdxList)=true;
     end
 end
-keep=imdilate(imfill(keep,'holes'),strel('disk',3));
+cores=bwconncomp(keep);
+keep=imdilate(imfill(keep,'holes'),strel('disk',7));
 out=im2double(a);
 cc=bwconncomp(keep);
 [x,y]=meshgrid(1:size(g,2),1:size(g,1));
@@ -32,4 +33,4 @@ end
 figure
 imshow(out)
 title('红豆区域以局部背景平面填补')
-disp(cc.NumObjects)
+disp(cores.NumObjects)

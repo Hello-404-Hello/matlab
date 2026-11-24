@@ -23,10 +23,15 @@ v(end)=0;
 a=force(t(1:off),v(1:off));
 b=-9.8-v(off:end).^2/800;
 fprintf('%.6f %.6f %.6f %.6f %.6f %.6f\n',h(off),v(off),a(end),b(1),t(end),h(end))
-figure
-subplot(3,1,1); plot(t,h); title('高度')
-subplot(3,1,2); plot(t,v); title('速度')
-subplot(3,1,3); plot([t(1:off),t(off:end)],[a,b]); title('加速度')
+figure('Name','高度')
+plot(t,h)
+xlabel('s'); ylabel('m')
+figure('Name','速度')
+plot(t,v)
+xlabel('s'); ylabel('m/s')
+figure('Name','加速度')
+plot([t(1:off),t(off:end)],[a,b])
+xlabel('s'); ylabel('m/s²')
 
 function a=force(t,v)
 a=(32000-.4*v.*abs(v))./(1400-18*t)-9.8;

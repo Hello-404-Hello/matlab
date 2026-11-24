@@ -6,16 +6,14 @@ p=odeset('RelTol',1e-8,'AbsTol',1e-9);
 [y,b,stop,top]=ode23(two,[60,90],a(end,:),odeset(p,'Events',@finish));
 z=one(60,a(end,:));
 w=two(60,a(end,:));
-disp([a(end,:),z(2),w(2),stop,top(1)])
+disp([a(end,:)';z(2);w(2);stop;top(1)])
 t=[x;y];
 h=[a(:,1);b(:,1)];
 v=[a(:,2);b(:,2)];
 aa=[(f-c*a(:,2).^2)./(m-18*x)-g;-g-c*b(:,2).^2/320];
 figure
-ax(1)=subplot(3,1,1); plot(t,h); ylabel('m')
-ax(2)=subplot(3,1,2); plot(t,v); ylabel('m/s')
-ax(3)=subplot(3,1,3); plot(t,aa); ylabel('m/s²')
-linkaxes(ax,'x')
+timetable_plot=stackedplot(t,[h,v,aa]);
+timetable_plot.DisplayLabels={'高度 (m)','速度 (m/s)','加速度 (m/s²)'};
 
 function [x,s,k]=finish(~,y)
 x=y(2);

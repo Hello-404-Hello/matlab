@@ -7,4 +7,4 @@ for b=35:-1:16
         xy(n,:)=[a,b];
     end
 end
-disp(xy(1:n,:))
+disp(table(xy(1:n,1),xy(1:n,2),'VariableNames',{'x','y'}))

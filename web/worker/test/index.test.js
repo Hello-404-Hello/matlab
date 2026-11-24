@@ -161,7 +161,7 @@ test("round two accepts only its designated app extensions and packages the cano
     return new Response("not found", {status:404});
   };
   const env = {GITHUB_OWNER:"owner",GITHUB_REPO:"repo",GITHUB_TOKEN:"test-token",SITE_ORIGIN:origin};
-  const request = (route, method = "GET", body) => new Request(`https://worker.test/${route}?round=2`, {
+  const request = (route, method = "GET", body) => new Request(`https://worker.test/round2/${route}`, {
     method,body:body&&JSON.stringify(body),headers:{Origin:origin}
   });
   try {

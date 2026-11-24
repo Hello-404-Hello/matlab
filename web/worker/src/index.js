@@ -11,8 +11,10 @@ export default {
     if (!env.GITHUB_TOKEN) return json({error:"Worker 尚未配置 GitHub Token"}, 503, cors);
 
     const url = new URL(request.url);
-    const path = url.pathname.replace(/\/+$/, "") || "/";
-    const roundId = url.searchParams.get("round") ?? "1";
+    const pathname = url.pathname.replace(/\/+$/, "") || "/";
+    const second = pathname.startsWith("/round2/");
+    const path = second ? pathname.slice("/round2".length) : pathname;
+    const roundId = second ? "2" : (url.searchParams.get("round") ?? "1");
     if (!Object.hasOwn(rounds, roundId)) return json({error:"作业轮次不存在"}, 400, cors);
     const round = rounds[roundId];
     try {

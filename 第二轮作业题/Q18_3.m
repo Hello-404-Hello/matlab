@@ -1,8 +1,11 @@
-queen=[4,6];
-horse=[5,4];
-king=[5,8];
-can_take_queen=false;
-fprintf('%d\n',both(horse,king,queen,can_take_queen))
+a=4; b=6;
+c=5; d=4;
+capture=false;
+qpos=[a,b];
+start=[c,d];
+goal=[5,8];
+
+fprintf('%d\n',both(start,goal,qpos,capture))
 
 function n=both(a,b,q,take)
 u=-ones(8); v=u;

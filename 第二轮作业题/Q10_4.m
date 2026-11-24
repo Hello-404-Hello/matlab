@@ -1,4 +1,6 @@
-a=267; b=36;
+eq=struct('a',267,'b',36);
+a=eq.a;
+b=eq.b;
 d=gcd(a,b);
 if b==0
     x=sign(a);

@@ -1,18 +1,25 @@
-queen=[4,6];
-horse=[5,4];
-king=[5,8];
-can_take_queen=false;
+hand=false;
+if hand
+    q0=input('皇后在哪一格 [行 列]？');
+    h0=input('马从哪一格出发 [行 列]？');
+else
+    q0=[4,6];
+    h0=[5,4];
+end
+want=[5,8];
+pass_queen=false;
+
 jump=[2,1;1,2;-1,2;-2,1;-2,-1;-1,-2;1,-2;2,-1];
 bound=0;
 result=-1;
 while bound<64
     left=-ones(8);
-    if findgoal(horse,king,queen,jump,bound,can_take_queen)
+    if findgoal(h0,want,q0,jump,bound,pass_queen)
         result=bound;
         break
     end
     bound=bound+1;
-    if ~reachable(horse,king,queen,jump,can_take_queen,left), break, end
+    if ~reachable(h0,want,q0,jump,pass_queen,left), break, end
 end
 fprintf('%d\n',result)
 

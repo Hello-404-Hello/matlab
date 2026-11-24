@@ -1,7 +1,7 @@
 pic=im2double(imread('ps.jpg'));
 g=pic(:,:,2);
-flat=imclose(g,strel('disk',23));
-dark=imopen(g<.66*flat,strel('disk',2));
+flat=imgaussfilt(g,18);
+dark=imopen(g<.385*flat,strel('disk',2));
 s=regionprops(dark,'PixelIdxList','Area','MajorAxisLength');
 bean=false(size(g));
 n=0;
@@ -12,7 +12,7 @@ for i=1:length(s)
         n=n+1;
     end
 end
-inside=imdilate(imfill(bean,'holes'),strel('disk',2));
+inside=imdilate(imfill(bean,'holes'),strel('disk',4));
 outside=imdilate(inside,strel('disk',4));
 alpha=max(double(inside),min(1,imgaussfilt(double(inside),1.2)*1.35));
 alpha(~outside)=0;

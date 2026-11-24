@@ -1,8 +1,8 @@
 (() => {
   const api = (window.MATLAB_COUNTER_API || "").replace(/\/+$/, "");
   const rounds = [
-    {suffix:"", manifest:"manifest.json", query:""},
-    {suffix:"-round2", manifest:"round2-manifest.json", query:"?round=2"}
+    {suffix:"", manifest:"manifest.json", counterPrefix:""},
+    {suffix:"-round2", manifest:"round2-manifest.json", counterPrefix:"round2/"}
   ];
   const aiDialog = document.getElementById("ai-prompt-dialog");
   const aiModel = document.getElementById("ai-model");
@@ -31,7 +31,7 @@
     }
   }
 
-  function initRound({suffix,manifest,query}) {
+  function initRound({suffix,manifest,counterPrefix}) {
     const element = id => document.getElementById(id + suffix);
     const button = element("download-button");
     const status = element("download-status");
@@ -60,7 +60,7 @@
     }
 
     async function loadCounts() {
-      const data = await fetchCounts(`counts${query}`, {cache:"no-store"});
+      const data = await fetchCounts(`${counterPrefix}counts`, {cache:"no-store"});
       const counts = new Map(data.questions.flatMap(q => q.variants.map(v => [v.file,v.downloadCount])));
       // Only offer versions already published on Pages, even when GitHub's listing is newer.
       for (const q of state.questions) {
@@ -79,7 +79,7 @@
     }
 
     async function record(variants) {
-      await fetchCounts(`record${query}`, {
+      await fetchCounts(`${counterPrefix}record`, {
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({files:variants.map(v => v.file)})

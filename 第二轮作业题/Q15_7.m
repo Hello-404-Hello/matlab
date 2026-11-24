@@ -1,5 +1,5 @@
-rng(15)
-A=randi([0,1],50);
+R=RandStream('mt19937ar','Seed',15);
+A=rand(R,50)>.5;
 segments=[];
 for t=1:4
     if t==4, B=fliplr(A); else, B=A; end

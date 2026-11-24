@@ -1,4 +1,5 @@
-z=readmatrix('Temp2.xlsx');
+c=readcell('Temp2.xlsx');
+z=cell2mat(c(2:end,:));
 n=size(z,1);
 p=movmean(z,7);
 [~,peak]=max(p,[],1);

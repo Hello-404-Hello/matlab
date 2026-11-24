@@ -1,4 +1,5 @@
-a=readmatrix('Temp2.xlsx');
+values=readcell('Temp2.xlsx','Range','A2:B201');
+a=cell2mat(values);
 b=diff(movmean(a,5));
 n=size(b,1);
 best=-inf;
@@ -16,6 +17,7 @@ end
 disp([1+(delay<0),delay*.01,5/abs(delay)])
 figure
 t=(0:size(a,1)-1)/100;
-plot(t,a(:,1),t,a(:,2),'-.')
+line(t,a(:,1),'LineStyle',':')
+line(t,a(:,2),'LineStyle','-')
 xlabel('时间 / s')
 legend('传感器 1','传感器 2')

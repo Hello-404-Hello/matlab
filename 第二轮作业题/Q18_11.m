@@ -1,16 +1,24 @@
-queen=[4,6];
-horse=[5,4];
-king=[5,8];
-can_take_queen=false;
-target=index(king);
-source=index(horse);
-q=index(queen);
+ask=false;
+line='4 6 / 5 4';
+if ask
+    line=input('填两个坐标，皇后在前，马在后：','s');
+end
+v=sscanf(strrep(line,'/',' '),'%d');
+[qr,qc,hr,hc]=deal(v(1),v(2),v(3),v(4));
+obstacle=[qr,qc];
+hstart=[hr,hc];
+last=[5,8];
+capture_ok=false;
+
+target=index(last);
+source=index(hstart);
+q=index(obstacle);
 a=cell(64,1);
 for i=1:64
-    if i==q&&~can_take_queen, continue, end
+    if i==q&&~capture_ok, continue, end
     [r,c]=ind2sub([8,8],i);
     for j=1:64
-        if j==q&&~can_take_queen, continue, end
+        if j==q&&~capture_ok, continue, end
         [x,y]=ind2sub([8,8],j);
         if abs(r-x)+abs(c-y)==3&&r~=x&&c~=y
             a{i}(end+1)=j;

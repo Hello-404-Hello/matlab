@@ -1,4 +1,5 @@
-p=readmatrix('Temp2.xlsx');
+sheet=readtable('Temp2.xlsx');
+p=sheet{:,:};
 n=size(p,1);
 k=-50:50;
 r=zeros(size(k));

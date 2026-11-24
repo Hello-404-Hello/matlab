@@ -1,4 +1,6 @@
-a=readmatrix('Temp2.xlsx');
+book='Temp2.xlsx';
+cols=detectImportOptions(book);
+a=readmatrix(book,cols);
 n=size(a,1);
 f=fft(a-mean(a),2*n);
 d=f(:,2).*conj(f(:,1));

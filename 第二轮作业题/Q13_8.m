@@ -9,7 +9,7 @@ v=sqrt(g/drag)*tan(alpha-s*sqrt(g*drag));
 h=y(end,1)+log(cos(alpha-s*sqrt(g*drag))/cos(alpha))/drag;
 a=accel(t,y(:,2));
 b=-g-drag*v.^2;
-disp([y(end,:),a(end),b(1),60+s(end),h(end)])
+disp(array2table([y(end,:),a(end),b(1),60+s(end),h(end)],'VariableNames',{'CutHeight','CutSpeed','Before','After','PeakTime','PeakHeight'}))
 figure
 tiledlayout(1,3)
 nexttile; plot([t;60+s],[y(:,1);h]); xlabel('时间'); ylabel('高度')

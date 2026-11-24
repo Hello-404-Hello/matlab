@@ -1,5 +1,5 @@
-f=readmatrix('pt.xlsx');
-p=f(:,2:4);
+f=readcell('pt.xlsx');
+p=cell2mat(f(2:end,2:4));
 u=[p(:,1:2),ones(size(p,1),1)];
 [q,r]=qr(u,0);
 s=r\(q'*p(:,3));

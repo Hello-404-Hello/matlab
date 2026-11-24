@@ -2,6 +2,7 @@ queen=[4,6];
 horse=[5,4];
 king=[5,8];
 can_take_queen=false;
+
 steps=[1,2;1,-2;-1,2;-1,-2;2,1;2,-1;-2,1;-2,-1];
 d=-ones(8);
 d(horse(1),horse(2))=0;

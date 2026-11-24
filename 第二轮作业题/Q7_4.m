@@ -7,4 +7,4 @@ for k=1:10
     p=[a(i),b(i)];
     s=s/4;
 end
-disp([p,z])
+disp(table(p(1),p(2),z,'VariableNames',{'x','y','Minimum'}))

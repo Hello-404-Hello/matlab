@@ -1,5 +1,5 @@
 rng(15)
-s=randi([0,1],50);
+s=reshape(randi(2,[1,2500])-1,50,50);
 vertical=zeros(1,50);
 right=vertical;
 left=vertical;

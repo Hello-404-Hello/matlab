@@ -1,4 +1,5 @@
-a=readmatrix('Temp2.xlsx');
+[ch1,ch2]=readvars('Temp2.xlsx');
+a=[ch1,ch2];
 a0=(a-mean(a))./std(a);
 k=-50:50;
 loss=zeros(size(k));

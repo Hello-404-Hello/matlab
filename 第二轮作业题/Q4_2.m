@@ -1,5 +1,5 @@
-v=readmatrix('pt.xlsx');
-p=v(:,2:4);
+t=readtable('pt.xlsx');
+p=t{:,2:4};
 o=mean(p,1);
 [~,~,w]=svd(p-o,0);
 n=w(:,end)';

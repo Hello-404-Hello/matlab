@@ -1,5 +1,5 @@
-rng(15)
-a=randi([0,1],50,50);
+s=RandStream('mt19937ar','Seed',15);
+a=randi(s,2,50,50)-1;
 m={ones(1,5),ones(5,1),eye(5),fliplr(eye(5))};
 dd=[0,1;1,0;1,1;1,-1];
 figure('Color','w')

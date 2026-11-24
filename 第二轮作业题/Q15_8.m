@@ -1,5 +1,8 @@
-rng(15)
-b=randi([0,1],50);
+sample=RandStream('mt19937ar','Seed',15);
+b=false(50);
+for col=1:50
+    b(:,col)=randi(sample,2,50,1)==2;
+end
 pack=zeros(1,50,'uint64');
 for r=1:50
     pack=bitor(pack,bitshift(uint64(b(r,:)),r-1));

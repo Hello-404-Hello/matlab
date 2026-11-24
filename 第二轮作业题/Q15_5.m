@@ -1,5 +1,5 @@
-rng(15)
-a=randi([0,1],50);
+rng(15,'twister')
+a=rand(50)>=.5;
 p=false(58); p(5:54,5:54)=logical(a);
 dirs=[1,0;0,1;1,1;1,-1];
 hits=cell(4,1);

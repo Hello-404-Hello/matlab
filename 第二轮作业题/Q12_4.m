@@ -1,4 +1,5 @@
-d=readmatrix('Temp2.xlsx');
+[a,b]=readvars('Temp2.xlsx');
+d=[a,b];
 n=size(d,1);
 del=duiqi(d,50);
 up=1+(del<0);

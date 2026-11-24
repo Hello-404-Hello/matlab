@@ -20,7 +20,9 @@ v2=q*tan(z);
 h2=h(end)+log(cos(z)/cos(p))/k;
 a=(32000-.4*v.^2)./(1400-18*t)-9.8;
 a2=-9.8-k*v2.^2;
-disp([h(end),v(end),a(end),a2(1),60+tmax,h2(end)])
+fprintf('%.6f %.6f\n',h(end),v(end))
+fprintf('%.6f %.6f\n',a(end),a2(1))
+fprintf('%.6f %.6f\n',60+tmax,h2(end))
 figure
 subplot(2,2,1); plot(t,h,60+s,h2); ylabel('高度')
 subplot(2,2,2); plot(t,v,60+s,v2); ylabel('速度')
